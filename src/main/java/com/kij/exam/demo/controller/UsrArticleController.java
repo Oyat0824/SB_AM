@@ -11,9 +11,11 @@ import com.kij.exam.demo.vo.Article;
 
 @Controller
 public class UsrArticleController {
+	// 인스턴스 변수
 	private int id;
 	private List<Article> articles;
 	
+	// 생성자
 	public UsrArticleController() {
 		this.id = 1;
 		this.articles = new ArrayList<>();
@@ -104,6 +106,18 @@ public class UsrArticleController {
 		}
 		
 		modifyArticle(id, title, body);
+		
+		return article;
+	}
+	
+	@RequestMapping("/usr/article/getArticle")
+	@ResponseBody
+	public Object getArticleAction(int id) {
+		Article article = getArticle(id);
+		
+		if(article == null) {
+			return id + "번 게시물이 존재하지 않습니다.";
+		}
 		
 		return article;
 	}
