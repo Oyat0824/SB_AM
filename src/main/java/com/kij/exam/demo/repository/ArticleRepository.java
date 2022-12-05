@@ -14,7 +14,8 @@ import com.kij.exam.demo.vo.Article;
 public interface ArticleRepository {
 	// 게시물 작성
 	// INSERT INTO article SET regDate = NOW(), updateDate = NOW(), title = ?, `body` = ?;
-	public Article writeArticle(String title, String body);
+	@Insert("INSERT INTO article SET regDate = NOW(), updateDate = NOW(), title = #{title}, `body` = #{body}")
+	public void writeArticle(String title, String body);
 
 	// 게시물 가져오기
 	// SELECT * FROM article WHERE id = ?;
@@ -35,5 +36,9 @@ public interface ArticleRepository {
 	// UPDATE article SET updateDate = NOW(), title = ?, `body` = ? WHERE id = ?;
 	@Update("UPDATE article SET updateDate = NOW(), title = #{title}, `body` = #{body} WHERE id = #{id}")
 	public void modifyArticle(int id, String title, String body);
+	
+	// SELECT LAST_INSERT_ID();
+	@Select("SELECT LAST_INSERT_ID()")
+	public int getLastInsertId();
 
 }

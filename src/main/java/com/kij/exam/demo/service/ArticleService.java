@@ -21,8 +21,9 @@ public class ArticleService {
 
 // 서비스 메서드
 	// 게시물 작성
-	public Article writeArticle(String title, String body) {
-		return articleRepository.writeArticle(title, body);
+	public int writeArticle(String title, String body) {
+		articleRepository.writeArticle(title, body);
+		return articleRepository.getLastInsertId();
 	}
 
 	// 게시물 가져오기
