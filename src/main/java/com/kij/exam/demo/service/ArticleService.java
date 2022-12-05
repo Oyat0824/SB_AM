@@ -17,8 +17,6 @@ public class ArticleService {
 	@Autowired
 	public ArticleService(ArticleRepository articleRepository) {
 		this.articleRepository = articleRepository;
-
-		articleRepository.makeTestData();
 	}
 
 // 서비스 메서드
@@ -32,6 +30,11 @@ public class ArticleService {
 		return articleRepository.getArticle(id);
 	}
 
+	// 게시물 목록
+	public List<Article> getArticles() {
+		return articleRepository.getArticles();
+	}
+
 	// 게시물 삭제
 	public void deleteArticle(int id) {
 		articleRepository.deleteArticle(id);
@@ -42,8 +45,4 @@ public class ArticleService {
 		articleRepository.modifyArticle(id, title, body);
 	}
 
-	// 게시물 목록
-	public List<Article> getArticles() {
-		return articleRepository.getArticles();
-	}
 }

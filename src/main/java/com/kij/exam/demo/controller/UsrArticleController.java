@@ -42,6 +42,13 @@ public class UsrArticleController {
 		return article;
 	}
 
+	// 목록
+	@RequestMapping("/usr/article/getArticles")
+	@ResponseBody
+	public List<Article> getArticles() {
+		return articleService.getArticles();
+	}
+
 	// 삭제
 	@RequestMapping("/usr/article/doDelete")
 	@ResponseBody
@@ -71,11 +78,5 @@ public class UsrArticleController {
 
 		return article;
 	}
-	
-	// 목록
-	@RequestMapping("/usr/article/getArticles")
-	@ResponseBody
-	public List<Article> getArticles() {
-		return articleService.getArticles();
-	}
+
 }
