@@ -79,7 +79,7 @@ public class UsrArticleController {
 		}
 
 		articleService.modifyArticle(id, title, body);
-
+		
 		return article;
 	}
 
