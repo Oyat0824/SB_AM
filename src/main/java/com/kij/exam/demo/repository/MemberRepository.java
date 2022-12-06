@@ -29,8 +29,17 @@ public interface MemberRepository {
 			WHERE id = #{id}
 			""")
 	public Member getMemberById(int id);
-	
+
+	// 로그인 아이디를 통해 멤버 가져오기
+	@Select("""
+			SELECT *
+			FROM `member`
+			WHERE loginId = #{loginId}
+			""")
+	public Member getMemberByLoginId(String loginId);
+
 	// 마지막 번호 가져오기
 	@Select("SELECT LAST_INSERT_ID()")
 	public int getLastInsertId();
+
 }
