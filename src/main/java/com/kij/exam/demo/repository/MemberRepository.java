@@ -37,9 +37,19 @@ public interface MemberRepository {
 			WHERE loginId = #{loginId}
 			""")
 	public Member getMemberByLoginId(String loginId);
-
+	
+	// 이름과 이메일이 같은 사람이 있는가
+	@Select("""
+			SELECT *
+			FROM `member`
+			WHERE `name` = #{name}
+			AND email = #{email}
+			""")
+	public Member getMemberByNameAndEmail(String name, String email);
+	
 	// 마지막 번호 가져오기
 	@Select("SELECT LAST_INSERT_ID()")
 	public int getLastInsertId();
+
 
 }

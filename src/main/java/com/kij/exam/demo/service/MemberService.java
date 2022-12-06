@@ -20,15 +20,20 @@ public class MemberService {
 // 서비스 메서드
 	// 회원가입
 	public int doJoin(String loginId, String loginPw, String name, String nickname, String cellphoneNum, String email) {
-		Member existsMember = getMemberByLoginId(loginId);
-		
 		// 로그인 아이디 중복체크
+		Member existsMember = getMemberByLoginId(loginId);
 		if(existsMember != null) {
 			return -1;
 		}
 		
+		// 이름, 이메일 중복체크
+		existsMember = getMemberByNameAndEmail(nickname, email);
+		if(existsMember != null) {
+			return -2;
+		}
+
 		memberRepository.doJoin(loginId, loginPw, name, nickname, cellphoneNum, email);
-		
+
 		return memberRepository.getLastInsertId();
 	}
 
@@ -38,8 +43,13 @@ public class MemberService {
 	}
 
 	// 로그인 아이디를 통해 멤버 가져오기
-	public Member getMemberByLoginId(String loginId) {
+	private Member getMemberByLoginId(String loginId) {
 		return memberRepository.getMemberByLoginId(loginId);
+	}
+
+	// 로그인 아이디를 통해 멤버 가져오기
+	private Member getMemberByNameAndEmail(String name, String email) {
+		return memberRepository.getMemberByNameAndEmail(name, email);
 	}
 
 }

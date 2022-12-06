@@ -9,8 +9,6 @@ import com.kij.exam.demo.service.MemberService;
 import com.kij.exam.demo.util.Utility;
 import com.kij.exam.demo.vo.Member;
 
-import lombok.experimental.UtilityClass;
-
 @Controller
 public class UsrMemberController {
 	// 인스턴스 변수
@@ -51,6 +49,11 @@ public class UsrMemberController {
 		// 아이디 중복체크
 		if(id == -1) {
 			return "이미 존재하는 아이디입니다.";
+		}
+		
+		// 이름 + 이메일 중복체크
+		if(id == -2) {
+			return "이미 사용중인 이름과 이메일입니다.";
 		}
 		
 		Member member = memberService.getMemberById(id);
