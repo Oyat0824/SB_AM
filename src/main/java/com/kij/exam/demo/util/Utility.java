@@ -18,5 +18,10 @@ public class Utility {
 		
 		return str.trim().length() == 0;
 	}
+	
+	// 텍스트 포맷용
+	public static Object f(String format, Object ...args) {
+		return String.format(format, args);
+	}
 
 }
