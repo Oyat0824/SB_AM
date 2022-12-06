@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.kij.exam.demo.repository.MemberRepository;
+import com.kij.exam.demo.vo.Member;
 
 @Service
 public class MemberService {
@@ -18,8 +19,14 @@ public class MemberService {
 
 // 서비스 메서드
 	// 회원가입
-	public void doJoin(String loginId, String loginPw, String name, String nickname, String cellphoneNum, String email) {
-//		memberRepository.doJoin(loginId, loginPw, name, nickname, cellphoneNum, email);
+	public int doJoin(String loginId, String loginPw, String name, String nickname, String cellphoneNum, String email) {
+		memberRepository.doJoin(loginId, loginPw, name, nickname, cellphoneNum, email);
+		
+		return memberRepository.getLastInsertId();
+	}
+
+	public Member getMemberById(int id) {
+		return memberRepository.getMemberById(id);
 	}
 
 }
