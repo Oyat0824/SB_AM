@@ -20,7 +20,7 @@ public class Utility {
 	}
 	
 	// 텍스트 포맷용
-	public static Object f(String format, Object ...args) {
+	public static String f(String format, Object ...args) {
 		return String.format(format, args);
 	}
 
