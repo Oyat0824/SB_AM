@@ -9,7 +9,7 @@ import com.kij.exam.demo.vo.Article;
 @Mapper
 public interface ArticleRepository {
 	// 게시물 작성
-	public void writeArticle(String title, String body);
+	public void writeArticle(String title, String body, int memberId);
 
 	// 게시물 가져오기
 	public Article getArticle(int id);

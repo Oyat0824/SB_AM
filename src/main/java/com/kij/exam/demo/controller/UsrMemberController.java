@@ -93,7 +93,7 @@ public class UsrMemberController {
 	// 로그아웃
 	@RequestMapping("/usr/member/doLogout")
 	@ResponseBody
-	public ResultData doLogout(HttpSession httpSession) {
+	public ResultData<?> doLogout(HttpSession httpSession) {
 		if(httpSession.getAttribute("loginedMemberId") == null) {
 			return ResultData.from("F-1", "이미 로그아웃 상태입니다.");
 		}

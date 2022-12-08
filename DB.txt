@@ -8,6 +8,7 @@ CREATE TABLE article(
 	id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	regDate DATETIME NOT NULL,
 	updateDate DATETIME NOT NULL,
+	memberId INT UNSIGNED NOT NULL,
 	title VARCHAR(200) NOT NULL,
 	`body` TEXT NOT NULL
 );
@@ -36,22 +37,27 @@ DESC article;
 SELECT * FROM `member`;
 DESC `member`;
 
+SELECT * FROM `member` WHERE `name` = '관리자' AND email = 'langue0824@gmail.com';
+
 # article 데이터 추가
 INSERT INTO article
 SET regDate = NOW(),
 updateDate = NOW(),
+memberId = 1,
 title = '제목1',
 `body` = '내용1';
 
 INSERT INTO article
 SET regDate = NOW(),
 updateDate = NOW(),
+memberId = 2,
 title = '제목2',
 `body` = '내용2';
 
 INSERT INTO article
 SET regDate = NOW(),
 updateDate = NOW(),
+memberId = 3,
 title = '제목3',
 `body` = '내용3';
 
@@ -86,3 +92,10 @@ loginPw = 'test2',
 `nickname` = '유저2',
 cellphoneNum = '01033334444',
 email = 'langue0824@gmail.com';
+
+SELECT LAST_INSERT_ID();
+
+ALTER TABLE article ADD COLUMN memberId INT UNSIGNED NOT NULL AFTER updateDate;
+
+UPDATE article
+SET memberId = 2;
