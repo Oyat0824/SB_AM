@@ -47,7 +47,7 @@ public class MemberService {
 	}
 
 	// 로그인 아이디를 통해 멤버 가져오기
-	private Member getMemberByLoginId(String loginId) {
+	public Member getMemberByLoginId(String loginId) {
 		return memberRepository.getMemberByLoginId(loginId);
 	}
 
@@ -55,5 +55,7 @@ public class MemberService {
 	private Member getMemberByNameAndEmail(String name, String email) {
 		return memberRepository.getMemberByNameAndEmail(name, email);
 	}
+
+	
 
 }

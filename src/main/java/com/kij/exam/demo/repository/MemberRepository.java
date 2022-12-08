@@ -21,7 +21,7 @@ public interface MemberRepository {
 			email = #{email}
 			""")
 	public void doJoin(String loginId, String loginPw, String name, String nickname, String cellphoneNum, String email);
-
+	
 	// 아이디를 통해 멤버 가져오기
 	@Select("""
 			SELECT *
@@ -50,6 +50,8 @@ public interface MemberRepository {
 	// 마지막 번호 가져오기
 	@Select("SELECT LAST_INSERT_ID()")
 	public int getLastInsertId();
+
+	
 
 
 }
