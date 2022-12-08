@@ -21,7 +21,7 @@ public class MemberService {
 
 // 서비스 메서드
 	// 회원가입
-	public ResultData doJoin(String loginId, String loginPw, String name, String nickname, String cellphoneNum, String email) {
+	public ResultData<Integer> doJoin(String loginId, String loginPw, String name, String nickname, String cellphoneNum, String email) {
 		// 로그인 아이디 중복체크
 		Member existsMember = getMemberByLoginId(loginId);
 		if(existsMember != null) {
