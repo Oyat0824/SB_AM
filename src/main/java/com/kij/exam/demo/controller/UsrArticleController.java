@@ -49,7 +49,7 @@ public class UsrArticleController {
 		
 		Article article = articleService.getArticle((int) writeArticleRd.getData1());
 		
-		return ResultData.from(writeArticleRd.getResultCode(), writeArticleRd.getMsg(), article);
+		return ResultData.from(writeArticleRd.getResultCode(), writeArticleRd.getMsg(), "article", article);
 	}
 
 	// 가져오기
@@ -62,7 +62,7 @@ public class UsrArticleController {
 			return ResultData.from("F-1", Utility.f("%d번 게시물이 존재하지 않습니다.", id));
 		}
 
-		return ResultData.from("S-1", Utility.f("%d번 게시물입니다.", id), article);
+		return ResultData.from("S-1", Utility.f("%d번 게시물입니다.", id), "article", article);
 	}
 
 	// 목록
@@ -70,7 +70,7 @@ public class UsrArticleController {
 	@ResponseBody
 	public ResultData<List<Article>> getArticles() {
 		List<Article> articles = articleService.getArticles();
-		return ResultData.from("S-1", "게시물 목록", articles);
+		return ResultData.from("S-1", "게시물 목록", "articles", articles);
 	}
 
 	// 삭제
@@ -82,15 +82,21 @@ public class UsrArticleController {
 			return ResultData.from("F-A", "로그인 후 이용해주세요.");
 		}
 		
+		int loginedMemberId = (int) httpSession.getAttribute("loginedMemberId");
+		
 		Article article = articleService.getArticle(id);
 
 		if (article == null) {
 			return ResultData.from("F-1", Utility.f("%d번 게시물이 존재하지 않습니다.", id));
 		}
+		
+		if (article.getMemberId() != loginedMemberId) {
+			return ResultData.from("F-B", "해당 게시물에 대한 권한이 없습니다.");
+		}
 
 		articleService.deleteArticle(id);
 
-		return ResultData.from("S1-1", Utility.f("%d번 게시물을 삭제했습니다.", id), id);
+		return ResultData.from("S-1", Utility.f("%d번 게시물을 삭제했습니다.", id), "id", id);
 	}
 
 	// 수정
@@ -102,15 +108,21 @@ public class UsrArticleController {
 			return ResultData.from("F-A", "로그인 후 이용해주세요.");
 		}
 		
+		int loginedMemberId = (int) httpSession.getAttribute("loginedMemberId");
+		
 		Article article = articleService.getArticle(id);
 
 		if (article == null) {
 			return ResultData.from("F-1", Utility.f("%d번 게시물이 존재하지 않습니다.", id));
 		}
+		
+		ResultData actorCanModifyRd = articleService.actorCanModify(loginedMemberId, article);
+		
+		if(actorCanModifyRd.isFail()) {
+			return actorCanModifyRd;
+		}
 
-		articleService.modifyArticle(id, title, body);
-
-		return ResultData.from("S-1", Utility.f("%d번 게시글을 수정했습니다.", id), article);
+		return articleService.modifyArticle(id, title, body);
 	}
 
 }

@@ -56,7 +56,7 @@ public class UsrMemberController {
 
 		Member member = memberService.getMemberById((int) doJoinRd.getData1());
 
-		return ResultData.from(doJoinRd.getResultCode(), doJoinRd.getMsg(), member);
+		return ResultData.from(doJoinRd.getResultCode(), doJoinRd.getMsg(), "member", member);
 	}
 
 	// 로그인
@@ -93,7 +93,7 @@ public class UsrMemberController {
 	// 로그아웃
 	@RequestMapping("/usr/member/doLogout")
 	@ResponseBody
-	public ResultData<?> doLogout(HttpSession httpSession) {
+	public ResultData doLogout(HttpSession httpSession) {
 		if(httpSession.getAttribute("loginedMemberId") == null) {
 			return ResultData.from("F-1", "이미 로그아웃 상태입니다.");
 		}

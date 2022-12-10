@@ -28,7 +28,7 @@ public class ArticleService {
 		
 		int id = articleRepository.getLastInsertId();
 		
-		return ResultData.from("S-1", Utility.f("%d번 게시물이 생성되었습니다.", id), id);
+		return ResultData.from("S-1", Utility.f("%d번 게시물이 생성되었습니다.", id), "id", id);
 	}
 
 	// 게시물 가져오기
@@ -47,8 +47,20 @@ public class ArticleService {
 	}
 
 	// 게시물 수정
-	public void modifyArticle(int id, String title, String body) {
+	public ResultData<Article> modifyArticle(int id, String title, String body) {
 		articleRepository.modifyArticle(id, title, body);
+		
+		Article article = getArticle(id);
+		
+		return ResultData.from("S-1", Utility.f("%d번 게시글을 수정했습니다.", id), "article", article);
+	}
+
+	public ResultData actorCanModify(int loginedMemberId, Article article) {
+		if (article.getMemberId() != loginedMemberId) {
+			return ResultData.from("F-B", "해당 게시물에 대한 권한이 없습니다.");
+		}
+		
+		return ResultData.from("S-1", "수정 가능");
 	}
 
 }
