@@ -27,8 +27,8 @@ public class UsrArticleController {
 
 // 액션 메서드
 	// 작성
-	@RequestMapping("/usr/article/doAdd")
-	@ResponseBody
+	@RequestMapping("/usr/article/doAdd")	// 주소
+	@ResponseBody							// 실행할 몸통
 	public ResultData<Article> doAdd(HttpSession httpSession, String title, String body) {
 		// 로그인 검사
 		if(httpSession.getAttribute("loginedMemberId") == null) {
