@@ -2,8 +2,11 @@ package com.kij.exam.demo.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -11,8 +14,6 @@ import com.kij.exam.demo.service.ArticleService;
 import com.kij.exam.demo.util.Utility;
 import com.kij.exam.demo.vo.Article;
 import com.kij.exam.demo.vo.ResultData;
-
-import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class UsrArticleController {
@@ -66,11 +67,13 @@ public class UsrArticleController {
 	}
 
 	// 목록
-	@RequestMapping("/usr/article/getArticles")
-	@ResponseBody
-	public ResultData<List<Article>> getArticles() {
+	@RequestMapping("/usr/article/list")
+	public String showList(Model model) {
 		List<Article> articles = articleService.getArticles();
-		return ResultData.from("S-1", "게시물 목록", "articles", articles);
+		
+		model.addAttribute("articles", articles);
+		
+		return "usr/article/list";
 	}
 
 	// 삭제
