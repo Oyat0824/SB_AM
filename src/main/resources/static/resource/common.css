@@ -8,3 +8,14 @@
 html > body {
 	font-family: 'GmarketSansMedium', sans-serif;
 }
+
+.table-box-type-1 > table {
+	width: 100%;
+}
+
+.table-box-type-1 > table th,
+.table-box-type-1 > table td {
+	border: 1px solid #999;
+	padding: 10px;
+	text-align: center;
+}
