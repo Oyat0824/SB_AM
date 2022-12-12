@@ -19,7 +19,7 @@
 					<c:forEach var="article" items="${articles}">
 						<tr>
 							<td>${article.id}</td>
-							<td>${article.regDate}</td>
+							<td>${article.regDate.substring(0, 16)}</td>
 							<td><a class="hover:text-yellow-500" href="detail?id=${article.id}">${article.title}</a></td>
 							<td>${article.memberId}</td>
 						</tr>

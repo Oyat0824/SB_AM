@@ -53,17 +53,14 @@ public class UsrArticleController {
 		return ResultData.from(writeArticleRd.getResultCode(), writeArticleRd.getMsg(), "article", article);
 	}
 
-	// 가져오기
-	@RequestMapping("/usr/article/getArticle")
-	@ResponseBody
-	public ResultData<Article> getArticle(int id) {
+	// 상세보기
+	@RequestMapping("/usr/article/detail")
+	public String getArticle(Model model, int id) {
 		Article article = articleService.getArticle(id);
+		
+		model.addAttribute("article", article);
 
-		if (article == null) {
-			return ResultData.from("F-1", Utility.f("%d번 게시물이 존재하지 않습니다.", id));
-		}
-
-		return ResultData.from("S-1", Utility.f("%d번 게시물입니다.", id), "article", article);
+		return "usr/article/detail";
 	}
 
 	// 목록
