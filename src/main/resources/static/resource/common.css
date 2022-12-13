@@ -19,3 +19,12 @@ html > body {
 	padding: 10px;
 	text-align: center;
 }
+
+.btn-text-link {
+	display: inline-block;
+	background-color: rgba(236, 72, 153)!important;
+	margin-top: 0.5rem;
+	margin-bottom: 0.5rem;
+	padding: 0.5rem;
+	color: #fff;
+}

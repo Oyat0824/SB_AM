@@ -25,7 +25,7 @@
 					</tr>
 					<tr>
 						<th>작성자</th>
-						<td>${article.memberId}</td>
+						<td>${article.writerName}</td>
 					</tr>
 					<tr>
 						<th>제목</th>
@@ -38,8 +38,12 @@
 				</tbody>
 			</table>
 		</div>
-		<div class="btns text-right">
-			<button class="bg-pink-500 my-2 p-2 text-white" type="button" onclick="history.back();">뒤로가기</button>
+		<div class="btns flex justify-between">
+			<div>
+				<a class="btn-text-link" href="doModify?id=${article.id}">수정</a>
+				<a class="btn-text-link" href="doDelete?id=${article.id}" onclick="if(confirm('정말 삭제하시겠습니까?') == false) return false;">삭제</a>
+			</div>
+			<button class="btn-text-link" type="button" onclick="history.back();">뒤로가기</button>
 		</div>
 	</div>
 </section>

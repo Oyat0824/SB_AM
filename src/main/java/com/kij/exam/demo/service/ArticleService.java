@@ -35,6 +35,11 @@ public class ArticleService {
 	public Article getArticle(int id) {
 		return articleRepository.getArticle(id);
 	}
+	
+	// 게시물 상세보기용 가져오기
+	public Article getForPrintArticle(int id) {
+		return articleRepository.getForPrintArticle(id);
+	}
 
 	// 게시물 목록
 	public List<Article> getArticles() {
@@ -62,5 +67,7 @@ public class ArticleService {
 		
 		return ResultData.from("S-1", "수정 가능");
 	}
+
+	
 
 }
