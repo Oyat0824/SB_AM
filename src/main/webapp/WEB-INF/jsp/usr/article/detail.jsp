@@ -39,10 +39,12 @@
 			</table>
 		</div>
 		<div class="btns flex justify-between">
-			<div>
-				<a class="btn-text-link" href="doModify?id=${article.id}">수정</a>
-				<a class="btn-text-link" href="doDelete?id=${article.id}" onclick="if(confirm('정말 삭제하시겠습니까?') == false) return false;">삭제</a>
-			</div>
+			<c:if test="${article.actorCanChangeData}">
+				<div>
+					<a class="btn-text-link" href="doModify?id=${article.id}">수정</a>
+					<a class="btn-text-link" href="doDelete?id=${article.id}" onclick="if(confirm('정말 삭제하시겠습니까?') == false) return false;">삭제</a>
+				</div>
+			</c:if>
 			<button class="btn-text-link" type="button" onclick="history.back();">뒤로가기</button>
 		</div>
 	</div>
