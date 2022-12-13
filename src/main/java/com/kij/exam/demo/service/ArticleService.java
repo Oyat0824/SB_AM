@@ -84,6 +84,7 @@ public class ArticleService {
 //		return ResultData.from("S-1", "삭제 가능");
 //	}
 	
+	// 검증
 	public ResultData actorCanMD(int loginedMemberId, Article article) {
 		if (article == null) {
 			return ResultData.from("F-1", "해당 게시물은 존재하지 않습니다.");
