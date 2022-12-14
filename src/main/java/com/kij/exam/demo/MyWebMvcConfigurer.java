@@ -9,17 +9,17 @@ import com.kij.exam.demo.interceptor.BeforeActionInterceptor;
 
 @Configuration
 public class MyWebMvcConfigurer implements WebMvcConfigurer {
-	private BeforeActionInterceptor beforActionInterceptor;
+	private BeforeActionInterceptor beforeActionInterceptor;
 	
 	// [의존성] 생성자 주입
 	@Autowired
-	public MyWebMvcConfigurer(BeforeActionInterceptor beforActionInterceptor) {
-		this.beforActionInterceptor = beforActionInterceptor;
+	public MyWebMvcConfigurer(BeforeActionInterceptor beforeActionInterceptor) {
+		this.beforeActionInterceptor = beforeActionInterceptor;
 	}
 
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
-		registry.addInterceptor(beforActionInterceptor).addPathPatterns("/**").excludePathPatterns("/resource/**").excludePathPatterns("/error");
+		registry.addInterceptor(beforeActionInterceptor).addPathPatterns("/**").excludePathPatterns("/resource/**").excludePathPatterns("/error");
 	}
 	
 }
