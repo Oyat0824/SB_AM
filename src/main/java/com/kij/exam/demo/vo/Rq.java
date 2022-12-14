@@ -1,15 +1,25 @@
 package com.kij.exam.demo.vo;
 
+import java.io.IOException;
+
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import com.kij.exam.demo.util.Utility;
 
 import lombok.Getter;
 
 public class Rq {
 	@Getter
 	private int loginedMemberId;
+	private HttpServletRequest req;
+	private HttpServletResponse res;
 
-	public Rq(HttpServletRequest req) {
+	public Rq(HttpServletRequest req, HttpServletResponse res) {
+		this.req = req;
+		this.res = res;
+		
 		// 세션 넣기
 		HttpSession httpSession = req.getSession();
 		
@@ -21,6 +31,29 @@ public class Rq {
 		}
 
 		this.loginedMemberId = loginedMemberId;
+	}
+
+	public void jsPrintHistoryBack(String msg) throws IOException {
+		res.setContentType("text/html; charset=UTF-8");
+		
+		println("<script>");
+		if(!Utility.empty(msg)) {
+			println("alert('"+ msg +"')");
+		}
+		println("history.back();");
+		println("</script>");
+	}
+
+	private void print(String str) {
+		try {
+			res.getWriter().append(str);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void println(String str) {
+		print(str + "\n");
 	}
 
 }

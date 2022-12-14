@@ -33,10 +33,6 @@ public class UsrArticleController {
 	@ResponseBody // 실행할 몸통
 	public ResultData<Article> doAdd(HttpServletRequest req, String title, String body) {
 		Rq rq = (Rq) req.getAttribute("rq");
-
-		if(rq.getLoginedMemberId() == 0) {
-			return ResultData.from("F-A", "로그인 후 이용해주세요!");
-		}
 		
 		// 유효성 검사
 		if (Utility.empty(title)) {
