@@ -1,5 +1,6 @@
 package com.kij.exam.demo.controller;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import com.kij.exam.demo.service.MemberService;
 import com.kij.exam.demo.util.Utility;
 import com.kij.exam.demo.vo.Member;
 import com.kij.exam.demo.vo.ResultData;
+import com.kij.exam.demo.vo.Rq;
 
 @Controller
 public class UsrMemberController {
@@ -63,9 +65,11 @@ public class UsrMemberController {
 	// 로그인
 	@RequestMapping("/usr/member/doLogin")
 	@ResponseBody
-	public String doLogin(HttpSession httpSession, String loginId, String loginPw) {
+	public String doLogin(HttpServletRequest req, String loginId, String loginPw) {
+		Rq rq = (Rq) req.getAttribute("rq");
+		
 		// 로그인 중복 검사
-		if (httpSession.getAttribute("loginedMemberId") != null) {
+		if (rq.getLoginedMemberId() != 0) {
 			return Utility.jsReplace("이미 로그인하셨습니다!", "/");
 		}
 		// 유효성 검사
@@ -85,8 +89,8 @@ public class UsrMemberController {
 		if (member.getLoginPw().equals(loginPw) == false) {
 			return Utility.jsHistoryBack("비밀번호가 일치하지 않습니다!");
 		}
-
-		httpSession.setAttribute("loginedMemberId", member.getId());
+		
+		rq.login(member);
 
 		return Utility.jsReplace(Utility.f("%s님 환영합니다.", member.getNickname()), "/");
 	}
@@ -100,13 +104,15 @@ public class UsrMemberController {
 	// 로그아웃
 	@RequestMapping("/usr/member/doLogout")
 	@ResponseBody
-	public ResultData doLogout(HttpSession httpSession) {
-		if (httpSession.getAttribute("loginedMemberId") == null) {
-			return ResultData.from("F-1", "이미 로그아웃 상태입니다.");
+	public String doLogout(HttpServletRequest req) {
+		Rq rq = (Rq) req.getAttribute("rq");
+		
+		if (rq.getLoginedMemberId() == 0) {
+			return Utility.jsHistoryBack("이미 로그아웃 상태입니다.");
 		}
+		
+		rq.logout();
 
-		httpSession.removeAttribute("loginedMemberId");
-
-		return ResultData.from("S-1", "로그아웃 완료!");
+		return Utility.jsReplace("로그아웃 완료!", "/");
 	}
 }
