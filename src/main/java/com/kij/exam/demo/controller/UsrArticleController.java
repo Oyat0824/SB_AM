@@ -33,7 +33,7 @@ public class UsrArticleController {
 	@ResponseBody // 실행할 몸통
 	public ResultData<Article> doAdd(HttpServletRequest req, String title, String body) {
 		Rq rq = (Rq) req.getAttribute("rq");
-		
+
 		// 유효성 검사
 		if (Utility.empty(title)) {
 			return ResultData.from("F-1", "제목을 입력해주세요!");
@@ -77,18 +77,14 @@ public class UsrArticleController {
 	public String doDelete(HttpServletRequest req, int id) {
 		Rq rq = (Rq) req.getAttribute("rq");
 
-		if(rq.getLoginedMemberId() == 0) {
-			return Utility.jsHistoryBack("로그인 후 이용해주세요!");
-		}
-
 		Article article = articleService.getArticle(id);
 
 		if (article == null) {
 			return Utility.jsHistoryBack(Utility.f("%d번 게시물은 존재하지 않습니다", id));
 		}
 
-		if (rq.getLoginedMemberId() != article.getMemberId()) {
-			return Utility.jsHistoryBack("해당 게시물에 대한 권한이 없습니다");
+		if (article.getMemberId() != rq.getLoginedMemberId()) {
+			return Utility.jsHistoryBack("해당 게시물에 대한 권한이 없습니다.");
 		}
 
 		articleService.deleteArticle(id);
@@ -102,19 +98,37 @@ public class UsrArticleController {
 	public ResultData<Article> doModify(HttpServletRequest req, int id, String title, String body) {
 		Rq rq = (Rq) req.getAttribute("rq");
 
-		if(rq.getLoginedMemberId() == 0) {
+		if (rq.getLoginedMemberId() == 0) {
 			return ResultData.from("F-A", "로그인 후 이용해주세요!");
 		}
 
 		Article article = articleService.getArticle(id);
 
-		ResultData actorCanModifyRd = articleService.actorCanMD(rq.getLoginedMemberId(), article);
+		ResultData actorCanMDRd = articleService.actorCanMD(rq.getLoginedMemberId(), article);
 
-		if (actorCanModifyRd.isFail()) {
-			return actorCanModifyRd;
+		if (actorCanMDRd.isFail()) {
+			return actorCanMDRd;
 		}
 
 		return articleService.modifyArticle(id, title, body);
+	}
+
+	// 수정 페이지
+	@RequestMapping("/usr/article/modify")
+	public String showModify(HttpServletRequest req, Model model, int id) {
+		Rq rq = (Rq) req.getAttribute("rq");
+
+		Article article = articleService.getForPrintArticle(rq.getLoginedMemberId(), id);
+
+		ResultData actorCanMDRd = articleService.actorCanMD(rq.getLoginedMemberId(), article);
+
+		if (actorCanMDRd.isFail()) {
+			return rq.jsReturnOnView(actorCanMDRd.getMsg(), true);
+		}
+		
+		model.addAttribute("article", article);
+
+		return "/usr/article/modify";
 	}
 
 }

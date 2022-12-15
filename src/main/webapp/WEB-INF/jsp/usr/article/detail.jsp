@@ -42,7 +42,7 @@
 			<button class="btn-text-link" type="button" onclick="history.back();">뒤로가기</button>
 			<c:if test="${article.actorCanChangeData}">
 				<div>
-					<a class="btn-text-link" href="doModify?id=${article.id}">수정</a>
+					<a class="btn-text-link" href="modify?id=${article.id}">수정</a>
 					<a class="btn-text-link" href="doDelete?id=${article.id}" onclick="if(confirm('정말 삭제하시겠습니까?') == false) return false;">삭제</a>
 				</div>
 			</c:if>

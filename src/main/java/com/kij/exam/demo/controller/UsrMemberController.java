@@ -97,7 +97,14 @@ public class UsrMemberController {
 
 	// 로그인 페이지
 	@RequestMapping("/usr/member/login")
-	public String showLogin() {
+	public String showLogin(HttpServletRequest req) {
+		Rq rq = (Rq) req.getAttribute("rq");
+		
+		// 로그인 중복 검사
+		if (rq.getLoginedMemberId() != 0) {
+			return rq.jsReturnOnView("이미 로그인 상태입니다!", true);
+		}
+		
 		return "usr/member/login";
 	}
 
