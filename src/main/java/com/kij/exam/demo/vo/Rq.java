@@ -36,12 +36,7 @@ public class Rq {
 	public void jsPrintHistoryBack(String msg) throws IOException {
 		res.setContentType("text/html; charset=UTF-8");
 		
-		println("<script>");
-		if(!Utility.empty(msg)) {
-			println("alert('"+ msg +"')");
-		}
-		println("history.back();");
-		println("</script>");
+		print(Utility.jsHistoryBack(msg));
 	}
 
 	private void print(String str) {
@@ -50,10 +45,6 @@ public class Rq {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-	
-	private void println(String str) {
-		print(str + "\n");
 	}
 
 }

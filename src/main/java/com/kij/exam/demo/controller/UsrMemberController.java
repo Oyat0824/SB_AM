@@ -27,7 +27,8 @@ public class UsrMemberController {
 	// 회원가입
 	@RequestMapping("/usr/member/doJoin")
 	@ResponseBody
-	public ResultData<Member> doJoin(String loginId, String loginPw, String name, String nickname, String cellphoneNum, String email) {
+	public ResultData<Member> doJoin(String loginId, String loginPw, String name, String nickname, String cellphoneNum,
+			String email) {
 		// 유효성 검사
 		if (Utility.empty(loginId)) {
 			return ResultData.from("F-1", "아이디를 입력해주세요!");
@@ -64,7 +65,7 @@ public class UsrMemberController {
 	@ResponseBody
 	public ResultData<Member> doLogin(HttpSession httpSession, String loginId, String loginPw) {
 		// 로그인 중복 검사
-		if(httpSession.getAttribute("loginedMemberId") != null) {
+		if (httpSession.getAttribute("loginedMemberId") != null) {
 			return ResultData.from("F-1", "이미 로그인하셨습니다!");
 		}
 		// 유효성 검사
@@ -74,32 +75,38 @@ public class UsrMemberController {
 		if (Utility.empty(loginPw)) {
 			return ResultData.from("F-3", "비밀번호를 입력해주세요!");
 		}
-		
+
 		Member member = memberService.getMemberByLoginId(loginId);
-		
-		if(member == null) {
+
+		if (member == null) {
 			return ResultData.from("F-4", Utility.f("존재하지 않는 아이디(%s)입니다.", loginId));
 		}
-		
-		if(member.getLoginPw().equals(loginPw) == false) {
+
+		if (member.getLoginPw().equals(loginPw) == false) {
 			return ResultData.from("F-5", "비밀번호가 일치하지 않습니다!");
 		}
-		
+
 		httpSession.setAttribute("loginedMemberId", member.getId());
-		
+
 		return ResultData.from("S-1", Utility.f("%s님 환영합니다.", member.getNickname()));
 	}
-	
+
+	// 로그인 페이지
+	@RequestMapping("/usr/member/login")
+	public String showLogin() {
+		return "usr/member/login";
+	}
+
 	// 로그아웃
 	@RequestMapping("/usr/member/doLogout")
 	@ResponseBody
 	public ResultData doLogout(HttpSession httpSession) {
-		if(httpSession.getAttribute("loginedMemberId") == null) {
+		if (httpSession.getAttribute("loginedMemberId") == null) {
 			return ResultData.from("F-1", "이미 로그아웃 상태입니다.");
 		}
-		
+
 		httpSession.removeAttribute("loginedMemberId");
-		
+
 		return ResultData.from("S-1", "로그아웃 완료!");
 	}
 }
