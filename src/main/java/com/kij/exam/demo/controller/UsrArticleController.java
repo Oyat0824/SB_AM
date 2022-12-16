@@ -78,13 +78,11 @@ public class UsrArticleController {
 		Rq rq = (Rq) req.getAttribute("rq");
 
 		Article article = articleService.getArticle(id);
+		
+		ResultData actorCanMDRd = articleService.actorCanMD(rq.getLoginedMemberId(), article);
 
-		if (article == null) {
-			return Utility.jsHistoryBack(Utility.f("%d번 게시물은 존재하지 않습니다", id));
-		}
-
-		if (article.getMemberId() != rq.getLoginedMemberId()) {
-			return Utility.jsHistoryBack("해당 게시물에 대한 권한이 없습니다.");
+		if (actorCanMDRd.isFail()) {
+			return Utility.jsHistoryBack(actorCanMDRd.getMsg());
 		}
 
 		articleService.deleteArticle(id);
@@ -95,22 +93,20 @@ public class UsrArticleController {
 	// 수정
 	@RequestMapping("/usr/article/doModify")
 	@ResponseBody
-	public ResultData<Article> doModify(HttpServletRequest req, int id, String title, String body) {
+	public String doModify(HttpServletRequest req, int id, String title, String body) {
 		Rq rq = (Rq) req.getAttribute("rq");
-
-		if (rq.getLoginedMemberId() == 0) {
-			return ResultData.from("F-A", "로그인 후 이용해주세요!");
-		}
 
 		Article article = articleService.getArticle(id);
 
 		ResultData actorCanMDRd = articleService.actorCanMD(rq.getLoginedMemberId(), article);
 
 		if (actorCanMDRd.isFail()) {
-			return actorCanMDRd;
+			return Utility.jsHistoryBack(actorCanMDRd.getMsg());
 		}
-
-		return articleService.modifyArticle(id, title, body);
+		
+		articleService.modifyArticle(id, title, body);
+		
+		return Utility.jsReplace(Utility.f("%d번 게시물을 수정했습니다", id), Utility.f("detail?id=%d", id));
 	}
 
 	// 수정 페이지

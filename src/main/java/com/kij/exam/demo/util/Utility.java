@@ -1,6 +1,7 @@
 package com.kij.exam.demo.util;
 
 public class Utility {
+	public static int chkStatus = 1;
 
 	public static boolean empty(Object obj) {
 		// 값이 비어있다면
