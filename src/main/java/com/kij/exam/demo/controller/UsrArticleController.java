@@ -29,24 +29,30 @@ public class UsrArticleController {
 
 // 액션 메서드
 	// 작성
-	@RequestMapping("/usr/article/doAdd") // 주소
+	@RequestMapping("/usr/article/doWrite") // 주소
 	@ResponseBody // 실행할 몸통
-	public ResultData<Article> doAdd(HttpServletRequest req, String title, String body) {
+	public String doWrite(HttpServletRequest req, String title, String body) {
 		Rq rq = (Rq) req.getAttribute("rq");
 
 		// 유효성 검사
 		if (Utility.empty(title)) {
-			return ResultData.from("F-1", "제목을 입력해주세요!");
+			return Utility.jsHistoryBack("제목을 입력해주세요!");
 		}
 		if (Utility.empty(body)) {
-			return ResultData.from("F-2", "내용을 입력해주세요!");
+			return Utility.jsHistoryBack("내용을 입력해주세요!");
 		}
 
 		ResultData<Integer> writeArticleRd = articleService.writeArticle(title, body, rq.getLoginedMemberId());
+		
+		int id = (int) writeArticleRd.getData1();
 
-		Article article = articleService.getArticle((int) writeArticleRd.getData1());
+		return Utility.jsReplace(Utility.f("%d번 게시물을 작성했습니다", id), Utility.f("detail?id=%d", id));
+	}
 
-		return ResultData.from(writeArticleRd.getResultCode(), writeArticleRd.getMsg(), "article", article);
+	// 작성 페이지
+	@RequestMapping("/usr/article/write") // 주소
+	public String showWrite() {
+		return "/usr/article/write";
 	}
 
 	// 목록
@@ -78,7 +84,7 @@ public class UsrArticleController {
 		Rq rq = (Rq) req.getAttribute("rq");
 
 		Article article = articleService.getArticle(id);
-		
+
 		ResultData actorCanMDRd = articleService.actorCanMD(rq.getLoginedMemberId(), article);
 
 		if (actorCanMDRd.isFail()) {
@@ -103,9 +109,9 @@ public class UsrArticleController {
 		if (actorCanMDRd.isFail()) {
 			return Utility.jsHistoryBack(actorCanMDRd.getMsg());
 		}
-		
+
 		articleService.modifyArticle(id, title, body);
-		
+
 		return Utility.jsReplace(Utility.f("%d번 게시물을 수정했습니다", id), Utility.f("detail?id=%d", id));
 	}
 
@@ -121,7 +127,7 @@ public class UsrArticleController {
 		if (actorCanMDRd.isFail()) {
 			return rq.jsReturnOnView(actorCanMDRd.getMsg(), true);
 		}
-		
+
 		model.addAttribute("article", article);
 
 		return "/usr/article/modify";

@@ -13,7 +13,7 @@
 				<tbody>
 					<tr>
 						<th>번호</th>
-						<td>${article.id}</td>
+						<td><div class="badge badge-lg">${article.id}</div></td>
 					</tr>
 					<tr>
 						<th>작성 날짜</th>
@@ -38,12 +38,12 @@
 				</tbody>
 			</table>
 		</div>
-		<div class="btns flex justify-between">
-			<button class="btn-text-link" type="button" onclick="history.back();">뒤로가기</button>
+		<div class="btns flex justify-between mt-5">
+			<button class="btn btn-primary" onclick="history.back();">뒤로가기</button>
 			<c:if test="${article.actorCanChangeData}">
 				<div>
-					<a class="btn-text-link" href="modify?id=${article.id}">수정</a>
-					<a class="btn-text-link" href="doDelete?id=${article.id}" onclick="if(confirm('정말 삭제하시겠습니까?') == false) return false;">삭제</a>
+					<a class="btn btn-secondary" href="modify?id=${article.id}">수정</a>
+					<a class="btn btn-secondary" href="doDelete?id=${article.id}" onclick="if(confirm('정말 삭제하시겠습니까?') == false) return false;">삭제</a>
 				</div>
 			</c:if>
 		</div>

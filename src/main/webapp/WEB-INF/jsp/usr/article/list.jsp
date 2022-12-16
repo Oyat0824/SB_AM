@@ -17,8 +17,8 @@
 
 				<tbody>
 					<c:forEach var="article" items="${articles}">
-						<tr>
-							<td>${article.id}</td>
+						<tr class="hover">
+							<td><div class="badge badge-lg">${article.id}</div></td>
 							<td>${article.regDate.substring(0, 16)}</td>
 							<td><a class="hover:text-yellow-500" href="detail?id=${article.id}">${article.title}</a></td>
 							<td>${article.writerName}</td>
@@ -27,6 +27,11 @@
 				</tbody>
 			</table>
 		</div>
+		<c:if test="${rq.getLoginedMemberId() != 0}">
+		<div class="btns flex justify-end mt-5">
+			<a class="btn btn-accent" href="/usr/article/write">작성</a>
+		</div>
+		</c:if>
 	</div>
 </section>
 <%@ include file="../common/foot.jsp"%>
