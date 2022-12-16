@@ -5,8 +5,9 @@
 <head>
 <meta charset="UTF-8">
 <title>${pageTitle}</title>
-<!-- 테일윈드 불러오기 -->
 <!-- 노말라이즈, 라이브러리 -->
+<!-- 데이지 UI, 테일윈드 불러오기 -->
+<link href="https://cdn.jsdelivr.net/npm/daisyui@2.45.0/dist/full.css" rel="stylesheet" type="text/css" />
 <script src="https://cdn.tailwindcss.com"></script>
 <!-- 제이쿼리 불러오기 -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
