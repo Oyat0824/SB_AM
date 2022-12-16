@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kij.exam.demo.service.ArticleService;
+import com.kij.exam.demo.service.BoardService;
 import com.kij.exam.demo.util.Utility;
 import com.kij.exam.demo.vo.Article;
+import com.kij.exam.demo.vo.Board;
 import com.kij.exam.demo.vo.ResultData;
 import com.kij.exam.demo.vo.Rq;
 
@@ -20,11 +22,13 @@ import com.kij.exam.demo.vo.Rq;
 public class UsrArticleController {
 	// 인스턴스 변수
 	private ArticleService articleService;
+	private BoardService boardService;
 
 	// 생성자 주입
 	@Autowired
-	public UsrArticleController(ArticleService articleService) {
+	public UsrArticleController(ArticleService articleService, BoardService boardService) {
 		this.articleService = articleService;
+		this.boardService = boardService;
 	}
 
 // 액션 메서드
@@ -57,9 +61,12 @@ public class UsrArticleController {
 
 	// 목록
 	@RequestMapping("/usr/article/list")
-	public String showList(Model model) {
-		List<Article> articles = articleService.getArticles();
+	public String showList(Model model, int boardId) {
+		Board board = boardService.getBoardById(boardId);
+		
+		List<Article> articles = articleService.getArticles(boardId);
 
+		model.addAttribute("board", board);
 		model.addAttribute("articles", articles);
 
 		return "usr/article/list";

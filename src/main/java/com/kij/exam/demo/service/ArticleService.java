@@ -46,8 +46,8 @@ public class ArticleService {
 	}
 
 	// 게시물 목록
-	public List<Article> getArticles() {
-		return articleRepository.getArticles();
+	public List<Article> getArticles(int boardId) {
+		return articleRepository.getArticles(boardId);
 	}
 
 	// 게시물 삭제

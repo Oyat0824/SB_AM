@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<c:set var="pageTitle" value="Article List" />
+<c:set var="pageTitle" value="${board.name } 게시판" />
 <%@ include file="../common/head.jsp"%>
 <section class="mt-8 text-xl">
 	<div class="container mx-auto px-3">
@@ -28,9 +28,9 @@
 			</table>
 		</div>
 		<c:if test="${rq.getLoginedMemberId() != 0}">
-		<div class="btns flex justify-end mt-5">
-			<a class="btn btn-accent" href="/usr/article/write">작성</a>
-		</div>
+			<div class="btns flex justify-end mt-5">
+				<a class="btn btn-accent" href="/usr/article/write">작성</a>
+			</div>
 		</c:if>
 	</div>
 </section>

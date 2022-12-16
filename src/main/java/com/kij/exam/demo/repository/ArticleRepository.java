@@ -18,7 +18,7 @@ public interface ArticleRepository {
 	public Article getForPrintArticle(int id);
 	
 	// 게시물 목록
-	public List<Article> getArticles();
+	public List<Article> getArticles(int boardId);
 
 	// 게시물 삭제
 	public void deleteArticle(int id);
