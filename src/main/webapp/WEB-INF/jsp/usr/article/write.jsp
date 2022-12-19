@@ -14,12 +14,24 @@
 
 					<tbody>
 						<tr>
+							<th>카테고리</th>
+							<td>
+								<select name="boardId" class="select select-bordered w-full">
+									<option>선택</option>
+									<option value="1">공지사항</option>
+									<option value="2">자유</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
 							<th>제목</th>
-							<td><input class="input input-ghost w-full text-lg border-gray-400" type="text" name="title" placeholder="제목을 입력해주세요." /></td>
+							<td><input class="input input-ghost w-full text-lg border-gray-400" type="text" name="title"
+								placeholder="제목을 입력해주세요." /></td>
 						</tr>
 						<tr>
 							<th>내용</th>
-							<td><textarea class="textarea textarea-ghost w-full text-base border-gray-400" name="body" placeholder="내용을 입력해주세요."></textarea></td>
+							<td><textarea class="textarea textarea-ghost w-full text-base border-gray-400" name="body"
+									placeholder="내용을 입력해주세요."></textarea></td>
 						</tr>
 						<tr>
 							<td colspan="2"><button class="btn btn-outline btn-accent w-full">작성</button></td>

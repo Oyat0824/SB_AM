@@ -32,7 +32,7 @@
 		</div>
 		<c:if test="${rq.getLoginedMemberId() != 0}">
 			<div class="btns flex justify-end mt-5">
-				<a class="btn btn-accent" href="/usr/article/write">작성</a>
+				<a class="btn btn-accent" href="/usr/article/write?boardId=${board.id }">작성</a>
 			</div>
 		</c:if>
 	</div>

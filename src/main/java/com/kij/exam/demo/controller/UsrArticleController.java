@@ -35,7 +35,7 @@ public class UsrArticleController {
 	// 작성
 	@RequestMapping("/usr/article/doWrite") // 주소
 	@ResponseBody // 실행할 몸통
-	public String doWrite(String title, String body) {
+	public String doWrite(int boardId, String title, String body) {
 		// 유효성 검사
 		if (Utility.empty(title)) {
 			return Utility.jsHistoryBack("제목을 입력해주세요!");
@@ -44,7 +44,7 @@ public class UsrArticleController {
 			return Utility.jsHistoryBack("내용을 입력해주세요!");
 		}
 
-		ResultData<Integer> writeArticleRd = articleService.writeArticle(title, body, rq.getLoginedMemberId());
+		ResultData<Integer> writeArticleRd = articleService.writeArticle(rq.getLoginedMemberId(), boardId, title, body);
 		
 		int id = (int) writeArticleRd.getData1();
 
