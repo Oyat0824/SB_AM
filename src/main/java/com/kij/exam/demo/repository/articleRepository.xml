@@ -1,47 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.kij.exam.demo.repository.ArticleRepository">
+<mapper
+	namespace="com.kij.exam.demo.repository.ArticleRepository">
 	<insert id="writeArticle">
 		INSERT INTO article
-			SET regDate = NOW(),
-				updateDate = NOW(),
-				memberId = #{memberId},
-				title = #{title},
-				`body` = #{body}
+		SET regDate = NOW(),
+		updateDate = NOW(),
+		memberId = #{memberId},
+		title = #{title},
+		`body` = #{body}
 	</insert>
-	
+
 	<select id="getArticle" resultType="Article">
 		SELECT *
-			FROM article
-			WHERE id = #{id}
+		FROM article
+		WHERE id = #{id}
 	</select>
-	
+
 	<select id="getForPrintArticle" resultType="Article">
-		SELECT A.*, M.nickname AS writerName
-			FROM article AS A
-			INNER JOIN `member` AS M
-			ON A.memberId = M.id
-			WHERE A.id = #{id}
+		SELECT A.*,
+		M.nickname AS writerName
+		FROM article AS A
+		INNER JOIN `member` AS M
+		ON A.memberId = M.id
+		WHERE A.id = #{id}
 	</select>
-	
+
 	<select id="getArticles" resultType="Article">
 		SELECT A.*, M.nickname AS writerName
-			FROM article AS A
-			INNER JOIN `member` AS M
-			ON A.memberId = M.id
-			WHERE 1 = 1
-			<if test="boardId != 0">
-				AND A.boardId = #{boardId}
-			</if>
-			ORDER BY A.id DESC
+		FROM article AS A
+		INNER JOIN `member` AS M
+		ON A.memberId = M.id
+		WHERE 1 = 1
+		<if test="boardId != 0">
+			AND A.boardId = #{boardId}
+		</if>
+		ORDER BY A.id DESC
 	</select>
-	
+
+	<select id="getArticlesCount" resultType="int">
+		SELECT COUNT(*)
+		FROM article
+		WHERE 1 = 1
+		<if test="boardId != 0">
+			AND boardId = #{boardId}
+		</if>
+	</select>
+
 	<delete id="deleteArticle">
 		DELETE FROM article
-			WHERE id = #{id}
+		WHERE id = #{id}
 	</delete>
-	
+
 	<update id="modifyArticle">
 		UPDATE article
 		<set>
@@ -49,9 +60,9 @@
 			<if test="title != null and title != ''">title = #{title},</if>
 			<if test="body != null and body != ''">`body` = #{body}</if>
 		</set>
-			WHERE id = #{id}
+		WHERE id = #{id}
 	</update>
-	
+
 	<select id="getLastInsertId" resultType="int">
 		SELECT LAST_INSERT_ID()
 	</select>

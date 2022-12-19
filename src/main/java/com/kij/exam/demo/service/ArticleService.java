@@ -44,6 +44,11 @@ public class ArticleService {
 		
 		return article;
 	}
+	
+	// 게시글 갯수
+	public int getArticlesCount(int boardId) {
+		return articleRepository.getArticlesCount(boardId);
+	}
 
 	// 게시물 목록
 	public List<Article> getArticles(int boardId) {
@@ -105,5 +110,7 @@ public class ArticleService {
 		ResultData actorCanChangeDataRd = actorCanMD(loginedMemberId, article);
 		article.setActorCanChangeData(actorCanChangeDataRd.isSuccess());
 	}
+
+	
 
 }

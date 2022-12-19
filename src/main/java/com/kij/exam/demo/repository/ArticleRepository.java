@@ -16,7 +16,10 @@ public interface ArticleRepository {
 
 	// 게시물 상세보기용 가져오기
 	public Article getForPrintArticle(int id);
-	
+
+	// 게시글 개수 가져오기
+	public int getArticlesCount(int boardId);
+
 	// 게시물 목록
 	public List<Article> getArticles(int boardId);
 
@@ -25,9 +28,8 @@ public interface ArticleRepository {
 
 	// 게시물 수정
 	public void modifyArticle(int id, String title, String body);
-	
+
 	// 게시물 번호 가져오기
 	public int getLastInsertId();
-
 
 }
