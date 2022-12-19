@@ -62,8 +62,8 @@ updateDate = NOW(),
 INSERT INTO `board`
 SET regDate = NOW(),
 updateDate = NOW(),
-`code` = 'free1',
-`name` = '자유1';
+`code` = 'free',
+`name` = '자유';
 
 # article 테이블에 boardId 컬럼 추가
 ALTER TABLE article ADD COLUMN boardId INT UNSIGNED NOT NULL AFTER `memberId`;
@@ -73,7 +73,7 @@ INSERT INTO article
 SET regDate = NOW(),
 updateDate = NOW(),
 memberId = 1,
-boardId = 2,
+boardId = 1,
 title = '제목1',
 `body` = '내용1';
 
@@ -81,7 +81,7 @@ INSERT INTO article
 SET regDate = NOW(),
 updateDate = NOW(),
 memberId = 2,
-boardId = 1,
+boardId = 2,
 title = '제목2',
 `body` = '내용2';
 
@@ -89,7 +89,7 @@ INSERT INTO article
 SET regDate = NOW(),
 updateDate = NOW(),
 memberId = 3,
-boardId = 1,
+boardId = 2,
 title = '제목3',
 `body` = '내용3';
 
@@ -126,3 +126,19 @@ cellphoneNum = '01033334444',
 email = 'langue0824@gmail.com';
 
 SELECT LAST_INSERT_ID();
+
+SELECT A.*, B.id, B.name AS boardId
+FROM article AS A
+INNER JOIN board AS B
+ON A.boardId = B.id;
+
+# 게시물 갯수 늘리기
+-- insert into article
+-- (
+-- 	regDate, updateDate, memberId, boardId, title, `body`
+-- )
+-- Select now(), NOW(), ROUND(RAND() * 2) + 1, ROUND(RAND() * 1) + 1, concat('제목_', ROUND(RAND() * 1000)), CONCAT('내용_', ROUND(RAND() * 1000))
+-- from article;
+
+-- select count(*)
+-- from article;

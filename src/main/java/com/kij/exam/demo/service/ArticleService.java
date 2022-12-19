@@ -51,8 +51,10 @@ public class ArticleService {
 	}
 
 	// 게시물 목록
-	public List<Article> getArticles(int boardId) {
-		return articleRepository.getArticles(boardId);
+	public List<Article> getArticles(int boardId, int itemsInAPage, int page) {
+		int limitStart = (page - 1) * itemsInAPage;
+		
+		return articleRepository.getArticles(boardId, itemsInAPage, limitStart);
 	}
 
 	// 게시물 삭제

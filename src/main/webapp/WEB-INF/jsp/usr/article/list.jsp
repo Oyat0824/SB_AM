@@ -35,6 +35,20 @@
 				<a class="btn btn-accent" href="/usr/article/write?boardId=${board.id }">작성</a>
 			</div>
 		</c:if>
+		
+		<div class="pageNav flex justify-center mt-5">
+			<div class="btn-group">
+				<c:if test="${param.page > 1 }">
+					<a class="btn btn-sm" href="?boardId=${boardId }&page=${param.page-1}">&lt;</a>
+				</c:if>
+				<c:forEach begin="${from}" end="${end}" var="i">
+					<a class="btn btn-sm ${param.page == i ? 'btn-active' : ''}" href="?boardId=${boardId }&page=${i}">${i}</a>
+				</c:forEach>
+				<c:if test="${param.page < pagesCount}">
+					<a class="btn btn-sm" href="?boardId=${boardId }&page=${param.page+1}">&gt;</a>
+				</c:if>
+			</div>
+		</div>
 	</div>
 </section>
 <%@ include file="../common/foot.jsp"%>

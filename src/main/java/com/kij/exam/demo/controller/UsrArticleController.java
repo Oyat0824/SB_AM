@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kij.exam.demo.service.ArticleService;
@@ -59,20 +60,38 @@ public class UsrArticleController {
 
 	// 목록 페이지
 	@RequestMapping("/usr/article/list")
-	public String showList(Model model, int boardId) {
+	public String showList(Model model, @RequestParam(defaultValue = "1") int boardId, @RequestParam(defaultValue = "1") int page) {
 		Board board = boardService.getBoardById(boardId);
+		
+		if(page <= 0) {
+			return rq.jsReturnOnView("페이지 번호가 올바르지 않습니다.", true);
+		}
 		
 		if(board == null) {
 			return rq.jsReturnOnView("존재하지 않는 게시판입니다.", true);
 		}
 		
 		int articlesCount = articleService.getArticlesCount(boardId);
+		int itemsInAPage = 10;
 		
-		List<Article> articles = articleService.getArticles(boardId);
+		int pagesCount = (int) Math.ceil(articlesCount / (double) itemsInAPage);
+		
+		List<Article> articles = articleService.getArticles(boardId, itemsInAPage, page);
+		
+		int pages = 10; 						// 페이지 수
+		int curPage = page / pages;				// 현재 페이지  1 / 10 = 0, 11 / 10 = 1
+		if( page % pages > 0 ) ++curPage;		// curPage 전위연산자로 증가 1 ~ 10 : 1, 11 ~ 20 : 2
+		int end = curPage * pages;				// 1 * 10 : 10, 2 * 10 : 20
+		int from = end - (pages - 1);			// 10 - 9 : 1, 20 - 9 : 11
+		end = pagesCount < end ? pagesCount : end;	// 엔드값이 더 클경우 정상적인 토탈페이지 적용
 
 		model.addAttribute("board", board);
+		model.addAttribute("boardId", boardId);
 		model.addAttribute("articles", articles);
 		model.addAttribute("articlesCount", articlesCount);
+		model.addAttribute("pagesCount", pagesCount);
+		model.addAttribute("from", from);
+		model.addAttribute("end", end);
 
 		return "usr/article/list";
 	}

@@ -21,7 +21,7 @@ public interface ArticleRepository {
 	public int getArticlesCount(int boardId);
 
 	// 게시물 목록
-	public List<Article> getArticles(int boardId);
+	public List<Article> getArticles(int boardId, int itemsInAPage, int limitStart);
 
 	// 게시물 삭제
 	public void deleteArticle(int id);
