@@ -6,10 +6,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.stereotype.Component;
+
 import com.kij.exam.demo.util.Utility;
 
 import lombok.Getter;
 
+@Component
+@Scope(value = "request", proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class Rq {
 	@Getter
 	private int loginedMemberId;
@@ -20,23 +26,31 @@ public class Rq {
 	public Rq(HttpServletRequest req, HttpServletResponse res) {
 		this.req = req;
 		this.res = res;
-		
+
 		// 세션 넣기
 		this.session = req.getSession();
-		
+
 		// 로그인 멤버 아이디 검증
 		int loginedMemberId = 0;
-		
+
 		if (session.getAttribute("loginedMemberId") != null) {
 			loginedMemberId = (int) session.getAttribute("loginedMemberId");
 		}
 
 		this.loginedMemberId = loginedMemberId;
+
+		this.req.setAttribute("rq", this);
+	}
+	
+	// 해당 메서드는 Rq 객체의 생성을 유도함
+	// 편의를 위해 BeforeActionInterceptor 에서 호출
+	public void initOnBeforeActionInterceptor() {
+		
 	}
 
 	public void jsPrintHistoryBack(String msg) {
 		res.setContentType("text/html; charset=UTF-8");
-		
+
 		print(Utility.jsHistoryBack(msg));
 	}
 
@@ -59,8 +73,7 @@ public class Rq {
 	public String jsReturnOnView(String msg, boolean historyBack) {
 		req.setAttribute("msg", msg);
 		req.setAttribute("historyBack", historyBack);
-		
+
 		return "usr/common/js";
 	}
-
 }

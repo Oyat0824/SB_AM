@@ -1,8 +1,5 @@
 package com.kij.exam.demo.controller;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,11 +15,13 @@ import com.kij.exam.demo.vo.Rq;
 public class UsrMemberController {
 	// 인스턴스 변수
 	private MemberService memberService;
+	private Rq rq;
 
 	// 생성자 주입
 	@Autowired
-	public UsrMemberController(MemberService memberService) {
+	public UsrMemberController(MemberService memberService, Rq rq) {
 		this.memberService = memberService;
+		this.rq = rq;
 	}
 
 // 액션 메서드
@@ -65,9 +64,7 @@ public class UsrMemberController {
 	// 로그인
 	@RequestMapping("/usr/member/doLogin")
 	@ResponseBody
-	public String doLogin(HttpServletRequest req, String loginId, String loginPw) {
-		Rq rq = (Rq) req.getAttribute("rq");
-		
+	public String doLogin(String loginId, String loginPw) {
 		// 로그인 중복 검사
 		if (rq.getLoginedMemberId() != 0) {
 			return Utility.jsReplace("이미 로그인하셨습니다!", "/");
@@ -97,9 +94,7 @@ public class UsrMemberController {
 
 	// 로그인 페이지
 	@RequestMapping("/usr/member/login")
-	public String showLogin(HttpServletRequest req) {
-		Rq rq = (Rq) req.getAttribute("rq");
-		
+	public String showLogin() {
 		// 로그인 중복 검사
 		if (rq.getLoginedMemberId() != 0) {
 			return rq.jsReturnOnView("이미 로그인 상태입니다!", true);
@@ -111,9 +106,7 @@ public class UsrMemberController {
 	// 로그아웃
 	@RequestMapping("/usr/member/doLogout")
 	@ResponseBody
-	public String doLogout(HttpServletRequest req) {
-		Rq rq = (Rq) req.getAttribute("rq");
-		
+	public String doLogout() {
 		if (rq.getLoginedMemberId() == 0) {
 			return Utility.jsHistoryBack("이미 로그아웃 상태입니다.");
 		}
