@@ -71,27 +71,21 @@ public class UsrArticleController {
 			return rq.jsReturnOnView("존재하지 않는 게시판입니다.", true);
 		}
 		
+		// 게시글 수
 		int articlesCount = articleService.getArticlesCount(boardId);
+		// 한 페이지에 나올 게시글 수
 		int itemsInAPage = 10;
-		
+		// 게시글 수에 따른 페이지 수 계산
 		int pagesCount = (int) Math.ceil(articlesCount / (double) itemsInAPage);
 		
 		List<Article> articles = articleService.getArticles(boardId, itemsInAPage, page);
 		
-		int pages = 10; 						// 페이지 수
-		int curPage = page / pages;				// 현재 페이지  1 / 10 = 0, 11 / 10 = 1
-		if( page % pages > 0 ) ++curPage;		// curPage 전위연산자로 증가 1 ~ 10 : 1, 11 ~ 20 : 2
-		int end = curPage * pages;				// 1 * 10 : 10, 2 * 10 : 20
-		int from = end - (pages - 1);			// 10 - 9 : 1, 20 - 9 : 11
-		end = pagesCount < end ? pagesCount : end;	// 엔드값이 더 클경우 정상적인 토탈페이지 적용
-
 		model.addAttribute("board", board);
 		model.addAttribute("boardId", boardId);
 		model.addAttribute("articles", articles);
 		model.addAttribute("articlesCount", articlesCount);
+		model.addAttribute("page", page);
 		model.addAttribute("pagesCount", pagesCount);
-		model.addAttribute("from", from);
-		model.addAttribute("end", end);
 
 		return "usr/article/list";
 	}
