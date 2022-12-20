@@ -15,6 +15,8 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" />
 <!-- 커스텀 공통 CSS -->
 <link rel="stylesheet" href="/resource/common.css" />
+<!-- 공통 JS -->
+<script src="/resource/common.js" defer="defer"></script>
 </head>
 <body>
 	<header>
@@ -24,8 +26,8 @@
 			<div class="flex-grow"></div>
 			<ul class="flex">
 				<li class="hover:text-purple-400"><a class="h-full px-3 flex items-center" href="/"><span>HOME</span></a></li>
-				<li class="hover:text-purple-400"><a class="h-full px-3 flex items-center" href="/usr/article/list?boardId=1"><span>NOTICE</span></a></li>
-				<li class="hover:text-purple-400"><a class="h-full px-3 flex items-center" href="/usr/article/list?boardId=2"><span>FREE</span></a></li>
+				<li class="hover:text-purple-400"><a class="h-full px-3 flex items-center" href="/usr/article/list?boardId=1&page=1"><span>NOTICE</span></a></li>
+				<li class="hover:text-purple-400"><a class="h-full px-3 flex items-center" href="/usr/article/list?boardId=2&page=1"><span>FREE</span></a></li>
 				<c:if test="${rq.getLoginedMemberId() == 0}">
 					<li class="hover:text-purple-400"><a class="h-full px-3 flex items-center" href="/usr/member/login"><span>LOGIN</span></a></li>
 				</c:if>

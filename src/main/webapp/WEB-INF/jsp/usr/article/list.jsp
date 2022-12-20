@@ -9,8 +9,25 @@
 <section class="mt-8 text-xl">
 	<div class="container mx-auto px-3">
 		<div class="table-box-type-1">
-			<div class="mb-3">
-				게시물 총 개수 : <span class="font-bold">${articlesCount }</span>
+			<div class="headTab flex justify-between items-center mb-3">
+				<div>
+					게시물 총 개수 : <span class="font-bold">${articlesCount }</span>
+				</div>
+
+				<form action="" class="form-control">
+					<input type="hidden" name="page" value="1" />
+					<input type="hidden" name="boardId" value="${boardId }" />
+					<div class="input-group">
+						<select data-value="${searchKeywordTypeCode }" name="searchKeywordTypeCode"
+							class="select select-bordered focus:outline-none">
+							<option value="title">제목</option>
+							<option value="body">내용</option>
+							<option value="title_body">제목 + 내용</option>
+						</select>
+						<input class="input input-bordered focus:outline-none" type="text" name="searchKeyword" placeholder="Search…" value="${searchKeyword }" />
+						<button class="btn btn-square focus:outline-none">GO</button>
+					</div>
+				</form>
 			</div>
 			<table class="table table-zebra w-full">
 				<thead>
@@ -36,7 +53,7 @@
 		</div>
 		<c:if test="${rq.getLoginedMemberId() != 0}">
 			<div class="btns flex justify-end mt-5">
-				<a class="btn btn-accent" href="/usr/article/write?boardId=${board.id }">작성</a>
+				<a class="btn" href="/usr/article/write?boardId=${board.id }">게시글 작성</a>
 			</div>
 		</c:if>
 		<div class="pageNav flex justify-center mt-5">
@@ -47,27 +64,29 @@
 				<c:set var="endPage" value="${pageBlock * maxPageNum}" />
 				<c:set var="startPage" value="${endPage - (maxPageNum - 1)}" />
 				<c:set var="endPage" value="${pagesCount < endPage ? pagesCount : endPage }" />
-				
+
+				<c:set var="pageBaseUri" value="&boardId=${boardId}&searchKeywordTypeCode=${searchKeywordTypeCode }&searchKeyword=${searchKeyword }" />
+
 				<c:if test="${param.page == 1}">
 					<a class="btn btn-sm w-12 btn-disabled">&lt;&lt;</a>
 					<a class="btn btn-sm w-12 btn-disabled">&lt;</a>
 				</c:if>
 				<c:if test="${param.page > 1}">
-					<a class="btn btn-sm w-12" href="?boardId=${boardId}&page=1">&lt;&lt;</a>
-					<a class="btn btn-sm w-12" href="?boardId=${boardId}&page=${param.page-1}">&lt;</a>
+					<a class="btn btn-sm w-12" href="?page=1${pageBaseUri}">&lt;&lt;</a>
+					<a class="btn btn-sm w-12" href="?page=${param.page-1}${pageBaseUri}">&lt;</a>
 				</c:if>
-				
+					
 				<c:forEach begin="${startPage }" end="${endPage }" var="i">
-					<a class="btn btn-sm w-12 ${param.page == i ? 'btn-active' : ''}" href="?boardId=${boardId }&page=${i}">${i}</a>
+					<a class="btn btn-sm w-12 ${param.page == i ? 'btn-active' : ''}" href="?page=${i}${pageBaseUri}">${i}</a>
 				</c:forEach>
-				
+
 				<c:if test="${param.page == pagesCount}">
 					<a class="btn btn-sm w-12 btn-disabled">&gt;</a>
 					<a class="btn btn-sm w-12 btn-disabled">&gt;&gt;</a>
 				</c:if>
 				<c:if test="${param.page < pagesCount}">
-					<a class="btn btn-sm w-12" href="?boardId=${boardId}&page=${param.page+1}">&gt;</a>
-					<a class="btn btn-sm w-12" href="?boardId=${boardId}&page=${pagesCount}">&gt;&gt;</a>
+					<a class="btn btn-sm w-12" href="?page=${param.page+1}${pageBaseUri}">&gt;</a>
+					<a class="btn btn-sm w-12" href="?page=${pagesCount}${pageBaseUri}">&gt;&gt;</a>
 				</c:if>
 			</div>
 		</div>

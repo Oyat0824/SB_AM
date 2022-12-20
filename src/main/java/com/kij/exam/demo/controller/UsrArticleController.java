@@ -46,7 +46,7 @@ public class UsrArticleController {
 		}
 
 		ResultData<Integer> writeArticleRd = articleService.writeArticle(rq.getLoginedMemberId(), boardId, title, body);
-		
+
 		int id = (int) writeArticleRd.getData1();
 
 		return Utility.jsReplace(Utility.f("%d번 게시물을 작성했습니다", id), Utility.f("detail?id=%d", id));
@@ -60,32 +60,38 @@ public class UsrArticleController {
 
 	// 목록 페이지
 	@RequestMapping("/usr/article/list")
-	public String showList(Model model, @RequestParam(defaultValue = "1") int boardId, @RequestParam(defaultValue = "1") int page) {
-		Board board = boardService.getBoardById(boardId);
-		
-		if(page <= 0) {
+	public String showList(Model model, @RequestParam(defaultValue = "1") int boardId,
+			@RequestParam(defaultValue = "1") int page,
+			@RequestParam(defaultValue = "title") String searchKeywordTypeCode,
+			@RequestParam(defaultValue = "") String searchKeyword) {
+
+		if (page <= 0) {
 			return rq.jsReturnOnView("페이지 번호가 올바르지 않습니다.", true);
 		}
-		
-		if(board == null) {
+
+		Board board = boardService.getBoardById(boardId);
+
+		if (board == null) {
 			return rq.jsReturnOnView("존재하지 않는 게시판입니다.", true);
 		}
-		
+
 		// 게시글 수
-		int articlesCount = articleService.getArticlesCount(boardId);
+		int articlesCount = articleService.getArticlesCount(boardId, searchKeywordTypeCode, searchKeyword);
 		// 한 페이지에 나올 게시글 수
 		int itemsInAPage = 10;
 		// 게시글 수에 따른 페이지 수 계산
 		int pagesCount = (int) Math.ceil(articlesCount / (double) itemsInAPage);
-		
-		List<Article> articles = articleService.getArticles(boardId, itemsInAPage, page);
-		
+
+		List<Article> articles = articleService.getArticles(boardId, searchKeywordTypeCode, searchKeyword, itemsInAPage, page);
+
 		model.addAttribute("board", board);
 		model.addAttribute("boardId", boardId);
 		model.addAttribute("articles", articles);
 		model.addAttribute("articlesCount", articlesCount);
 		model.addAttribute("page", page);
 		model.addAttribute("pagesCount", pagesCount);
+		model.addAttribute("searchKeywordTypeCode", searchKeywordTypeCode);
+		model.addAttribute("searchKeyword", searchKeyword);
 
 		return "usr/article/list";
 	}

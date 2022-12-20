@@ -18,10 +18,10 @@ public interface ArticleRepository {
 	public Article getForPrintArticle(int id);
 
 	// 게시글 개수 가져오기
-	public int getArticlesCount(int boardId);
+	public int getArticlesCount(int boardId, String searchKeywordTypeCode, String searchKeyword);
 
 	// 게시물 목록
-	public List<Article> getArticles(int boardId, int itemsInAPage, int limitStart);
+	public List<Article> getArticles(int boardId, String searchKeywordTypeCode, String searchKeyword, int itemsInAPage, int limitStart);
 
 	// 게시물 삭제
 	public void deleteArticle(int id);
