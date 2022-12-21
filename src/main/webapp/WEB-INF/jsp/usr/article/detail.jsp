@@ -28,6 +28,10 @@
 						<td>${article.writerName}</td>
 					</tr>
 					<tr>
+						<th>조회수</th>
+						<td>${article.viewCnt}</td>
+					</tr>
+					<tr>
 						<th>제목</th>
 						<td>${article.title}</td>
 					</tr>

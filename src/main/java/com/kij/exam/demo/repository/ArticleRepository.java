@@ -31,5 +31,11 @@ public interface ArticleRepository {
 
 	// 게시물 번호 가져오기
 	public int getLastInsertId();
+	
+	// 게시글 조회수 증가
+	public int increaseViewCnt(int id);
+	
+	// 게시글 조회수 가져오기
+	public int getArticleViewCnt(int id);
 
 }

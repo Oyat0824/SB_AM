@@ -112,7 +112,21 @@ public class ArticleService {
 		ResultData actorCanChangeDataRd = actorCanMD(loginedMemberId, article);
 		article.setActorCanChangeData(actorCanChangeDataRd.isSuccess());
 	}
-
 	
+	// 조회수 증가
+	public ResultData<Integer> increaseViewCnt(int id) {
+		int affectedRowsCount = articleRepository.increaseViewCnt(id);
+		
+		if(affectedRowsCount == 0) {
+			return ResultData.from("F-1", "해당 게시물은 존재하지 않습니다.", "affectedRowsCount", affectedRowsCount);
+		}
+		
+		return ResultData.from("S-1", "조회수 증가", "affectedRowsCount", affectedRowsCount);
+	}
+	
+	// 조회수 가져오기
+	public int getArticleViewCnt(int id) {
+		return articleRepository.getArticleViewCnt(id);
+	}
 
 }

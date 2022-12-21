@@ -33,9 +33,10 @@
 				<thead>
 					<tr>
 						<th>번호</th>
-						<th>날짜</th>
-						<th>제목</th>
+						<th class="title">제목</th>
 						<th>작성자</th>
+						<th>날짜</th>
+						<th>조회수</th>
 					</tr>
 				</thead>
 
@@ -43,9 +44,10 @@
 					<c:forEach var="article" items="${articles}">
 						<tr class="hover">
 							<td><div class="badge badge-lg">${article.id}</div></td>
-							<td>${article.regDate.substring(0, 16)}</td>
 							<td><a class="hover:text-yellow-500" href="detail?id=${article.id}">${article.title}</a></td>
 							<td>${article.writerName}</td>
+							<td>${article.regDate.substring(2, 16)}</td>
+							<td>${article.viewCnt}</td>
 						</tr>
 					</c:forEach>
 				</tbody>
@@ -67,25 +69,25 @@
 
 				<c:set var="pageBaseUri" value="&boardId=${boardId}&searchKeywordTypeCode=${searchKeywordTypeCode }&searchKeyword=${searchKeyword }" />
 
-				<c:if test="${param.page == 1}">
+				<c:if test="${page == 1}">
 					<a class="btn btn-sm w-12 btn-disabled">&lt;&lt;</a>
 					<a class="btn btn-sm w-12 btn-disabled">&lt;</a>
 				</c:if>
-				<c:if test="${param.page > 1}">
+				<c:if test="${page > 1}">
 					<a class="btn btn-sm w-12" href="?page=1${pageBaseUri}">&lt;&lt;</a>
-					<a class="btn btn-sm w-12" href="?page=${param.page-1}${pageBaseUri}">&lt;</a>
+					<a class="btn btn-sm w-12" href="?page=${page-1}${pageBaseUri}">&lt;</a>
 				</c:if>
 					
 				<c:forEach begin="${startPage }" end="${endPage }" var="i">
-					<a class="btn btn-sm w-12 ${param.page == i ? 'btn-active' : ''}" href="?page=${i}${pageBaseUri}">${i}</a>
+					<a class="btn btn-sm w-12 ${page == i ? 'btn-active' : ''}" href="?page=${i}${pageBaseUri}">${i}</a>
 				</c:forEach>
 
-				<c:if test="${param.page == pagesCount}">
+				<c:if test="${page == pagesCount}">
 					<a class="btn btn-sm w-12 btn-disabled">&gt;</a>
 					<a class="btn btn-sm w-12 btn-disabled">&gt;&gt;</a>
 				</c:if>
-				<c:if test="${param.page < pagesCount}">
-					<a class="btn btn-sm w-12" href="?page=${param.page+1}${pageBaseUri}">&gt;</a>
+				<c:if test="${page < pagesCount}">
+					<a class="btn btn-sm w-12" href="?page=${page+1}${pageBaseUri}">&gt;</a>
 					<a class="btn btn-sm w-12" href="?page=${pagesCount}${pageBaseUri}">&gt;&gt;</a>
 				</c:if>
 			</div>

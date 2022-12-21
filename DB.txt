@@ -67,6 +67,8 @@ updateDate = NOW(),
 
 # article 테이블에 boardId 컬럼 추가
 ALTER TABLE article ADD COLUMN boardId INT UNSIGNED NOT NULL AFTER `memberId`;
+# article 테이블에 viewCnt 컬럼 추가
+ALTER TABLE article ADD COLUMN viewCnt INT UNSIGNED NOT NULL DEFAULT 0;
 
 # article 데이터 추가
 INSERT INTO article
@@ -133,12 +135,12 @@ INNER JOIN board AS B
 ON A.boardId = B.id;
 
 # 게시물 갯수 늘리기
--- insert into article
--- (
--- 	regDate, updateDate, memberId, boardId, title, `body`
--- )
--- Select now(), NOW(), ROUND(RAND() * 2) + 1, ROUND(RAND() * 1) + 1, concat('제목_', ROUND(RAND() * 1000)), CONCAT('내용_', ROUND(RAND() * 1000))
--- from article;
+INSERT INTO article
+(
+regDate, updateDate, memberId, boardId, title, `body`
+)
+SELECT NOW(), NOW(), ROUND(RAND() * 2) + 1, ROUND(RAND() * 1) + 1, CONCAT('제목_', ROUND(RAND() * 1000)), CONCAT('내용_', ROUND(RAND() * 1000))
+FROM article;
 
 -- select count(*)
 -- from article;

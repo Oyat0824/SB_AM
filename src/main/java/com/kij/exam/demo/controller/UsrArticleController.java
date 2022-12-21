@@ -82,7 +82,8 @@ public class UsrArticleController {
 		// 게시글 수에 따른 페이지 수 계산
 		int pagesCount = (int) Math.ceil(articlesCount / (double) itemsInAPage);
 
-		List<Article> articles = articleService.getArticles(boardId, searchKeywordTypeCode, searchKeyword, itemsInAPage, page);
+		List<Article> articles = articleService.getArticles(boardId, searchKeywordTypeCode, searchKeyword, itemsInAPage,
+				page);
 
 		model.addAttribute("board", board);
 		model.addAttribute("boardId", boardId);
@@ -94,6 +95,20 @@ public class UsrArticleController {
 		model.addAttribute("searchKeyword", searchKeyword);
 
 		return "usr/article/list";
+	}
+
+	// 조회수 관련
+	@RequestMapping("/usr/article/doIncreaseViewCntRd")
+	@ResponseBody
+	public ResultData<Integer> doIncreaseViewCntRd(int id) {
+		ResultData<Integer> increaseViewCntRd = articleService.increaseViewCnt(id);
+
+		if (increaseViewCntRd.isFail()) {
+			return increaseViewCntRd;
+		}
+
+		return ResultData.from(increaseViewCntRd.getResultCode(), increaseViewCntRd.getMsg(), "viewCont",
+				articleService.getArticleViewCnt(id));
 	}
 
 	// 상세보기 페이지

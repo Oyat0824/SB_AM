@@ -6,7 +6,8 @@
 	<insert id="writeArticle">
 		INSERT INTO article
 		SET regDate = NOW(),
-		updateDate = NOW(),
+		updateDate =
+		NOW(),
 		memberId = #{memberId},
 		boardId = #{boardId},
 		title = #{title},
@@ -24,14 +25,16 @@
 		M.nickname AS writerName
 		FROM article AS A
 		INNER JOIN `member` AS M
-		ON A.memberId = M.id
+		ON
+		A.memberId = M.id
 		WHERE A.id = #{id}
 	</select>
 
 	<select id="getArticles" resultType="Article">
 		SELECT A.*, M.nickname AS writerName
 		FROM article AS A
-		INNER JOIN `member` AS M
+		INNER JOIN
+		`member` AS M
 		ON A.memberId = M.id
 		WHERE 1 = 1
 		<if test="boardId != 0">
@@ -47,15 +50,15 @@
 				</when>
 				<otherwise>
 					AND (
-						title LIKE CONCAT('%', #{searchKeyword}, '%')
-						OR `body` LIKE CONCAT('%', #{searchKeyword}, '%')
+					title LIKE CONCAT('%', #{searchKeyword}, '%')
+					OR `body` LIKE CONCAT('%', #{searchKeyword}, '%')
 					)
 				</otherwise>
 			</choose>
 		</if>
 		ORDER BY A.id DESC
 		LIMIT #{limitStart}, #{itemsInAPage}
-		
+
 	</select>
 
 	<select id="getArticlesCount" resultType="int">
@@ -75,8 +78,8 @@
 				</when>
 				<otherwise>
 					AND (
-						title LIKE CONCAT('%', #{searchKeyword}, '%')
-						OR `body` LIKE CONCAT('%', #{searchKeyword}, '%')
+					title LIKE CONCAT('%', #{searchKeyword}, '%')
+					OR `body` LIKE CONCAT('%', #{searchKeyword}, '%')
 					)
 				</otherwise>
 			</choose>
@@ -100,5 +103,17 @@
 
 	<select id="getLastInsertId" resultType="int">
 		SELECT LAST_INSERT_ID()
+	</select>
+
+	<update id="increaseViewCnt">
+		UPDATE article
+		SET viewCnt = viewCnt + 1
+		WHERE id = #{id}
+	</update>
+	
+	<select id="getArticleViewCnt" resultType="int">
+		SELECT viewCnt
+		FROM article
+		WHERE id = #{id}
 	</select>
 </mapper>

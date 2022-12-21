@@ -12,6 +12,11 @@ html > body {
 
 .table-box-type-1 > table th,
 .table-box-type-1 > table td {
-	border: 1px solid #999;
+	border-top: 1px solid #999;
+	border-bottom: 1px solid #999;
 	text-align: center;
+}
+
+.table-box-type-1 > table th.title {
+	width: 100%;
 }
