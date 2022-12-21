@@ -2,6 +2,31 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <c:set var="pageTitle" value="Article Detail" />
 <%@ include file="../common/head.jsp"%>
+
+<script>
+	// 파라미터 값 받을 객체 변수 생성
+	const params = {};
+	// 객체 id 에 detail 페이지 주소에 있는 id 값을 넣음
+	params.id = parseInt('${param.id}');
+	
+	// 함수명
+	function ArticleDetail__increaseViewCnt() {
+		// 해당 주소에서 가져온 json을 가져옴
+		$.get('doIncreaseViewCntRd', {
+			// 파라미터 값 id에 detail에 있는 param.id 를 넣어줌
+			id : params.id,
+			// ajaxMode 설정
+			ajaxMode : 'Y'
+		// doIncreaseViewCntRd에서 처리된 객체를 매개변수로 받아옴
+		}, function(data){
+			// 받아온 데이터를 통해 javascript를 통해 html 수정
+			$('.article-detail__view-count').empty().html(data.data1);
+		}, 'json');
+	}
+	
+	ArticleDetail__increaseViewCnt();
+</script>
+
 <section class="mt-8 text-xl">
 	<div class="container mx-auto px-3">
 		<div class="table-box-type-1">
@@ -29,7 +54,7 @@
 					</tr>
 					<tr>
 						<th>조회수</th>
-						<td>${article.viewCnt}</td>
+						<td><span class="badge article-detail__view-count">${article.viewCnt}</span></td>
 					</tr>
 					<tr>
 						<th>제목</th>

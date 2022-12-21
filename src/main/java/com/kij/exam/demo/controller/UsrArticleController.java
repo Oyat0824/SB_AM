@@ -106,9 +106,13 @@ public class UsrArticleController {
 		if (increaseViewCntRd.isFail()) {
 			return increaseViewCntRd;
 		}
-
-		return ResultData.from(increaseViewCntRd.getResultCode(), increaseViewCntRd.getMsg(), "viewCont",
+		
+		ResultData<Integer> rd = ResultData.from(increaseViewCntRd.getResultCode(), increaseViewCntRd.getMsg(), "viewCont",
 				articleService.getArticleViewCnt(id));
+		
+		rd.setData2("id", id);
+		
+		return rd;
 	}
 
 	// 상세보기 페이지
