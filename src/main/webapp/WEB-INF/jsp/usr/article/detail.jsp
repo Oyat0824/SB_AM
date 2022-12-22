@@ -4,24 +4,25 @@
 <%@ include file="../common/head.jsp"%>
 
 <script>
-	// 파라미터 값 받을 객체 변수 생성
 	const params = {};
-	// 객체 id 에 detail 페이지 주소에 있는 id 값을 넣음
 	params.id = parseInt('${param.id}');
 	
-	// 함수명
 	function ArticleDetail__increaseViewCnt() {
-		// 해당 주소에서 가져온 json을 가져옴
+		const localStorageKey = 'article__' + params.id + '__alreadyViews';
+		
+		if(localStorage.getItem(localStorageKey)) {
+			return;
+		}
+		
+		localStorage.setItem(localStorageKey, true);
+		
 		$.get('doIncreaseViewCntRd', {
-			// 파라미터 값 id에 detail에 있는 param.id 를 넣어줌
 			id : params.id,
-			// ajaxMode 설정
 			ajaxMode : 'Y'
-		// doIncreaseViewCntRd에서 처리된 객체를 매개변수로 받아옴
 		}, function(data){
-			// 받아온 데이터를 통해 javascript를 통해 html 수정
 			$('.article-detail__view-count').empty().html(data.data1);
 		}, 'json');
+		
 	}
 	
 	ArticleDetail__increaseViewCnt();
