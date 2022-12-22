@@ -40,6 +40,42 @@ CREATE TABLE board(
 	delDate DATETIME COMMENT '삭제 날짜'
 );
 
+# reactionPoint 테이블 생성
+CREATE TABLE reactionPoint (
+	id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	regDate DATETIME NOT NULL,
+	updateDate DATETIME NOT NULL,
+	memberId INT UNSIGNED NOT NULL,
+	relTypeCode VARCHAR(20) NOT NULL COMMENT '관련 데이터 타입 코드',
+	relId INT UNSIGNED NOT NULL COMMENT '관련 데이터 번호',
+	`point` SMALLINT NOT NULL
+);
+
+# reactionPoint 데이터 삽입
+INSERT INTO reactionPoint
+SET regDate = NOW(),
+updateDate = NOW(),
+memberId = 1,
+relTypeCode = 'article',
+relId = 2,
+`point` = 1;
+
+INSERT INTO reactionPoint
+SET regDate = NOW(),
+updateDate = NOW(),
+memberId = 2,
+relTypeCode = 'article',
+relId = 2,
+`point` = 1;
+
+INSERT INTO reactionPoint
+SET regDate = NOW(),
+updateDate = NOW(),
+memberId = 3,
+relTypeCode = 'article',
+relId = 2,
+`point` = -1;
+
 # board 테이블 조회
 SELECT * FROM `board`;
 DESC `board`;
@@ -47,6 +83,10 @@ DESC `board`;
 # article 테이블 조회
 SELECT * FROM article;
 DESC article;
+
+# reactionPoint 테이블 조회
+SELECT * FROM reactionPoint;
+DESC reactionPoint;
 
 # member 테이블 조회
 SELECT * FROM `member`;
@@ -144,3 +184,19 @@ FROM article;
 
 -- select count(*)
 -- from article;
+
+SELECT A.*,
+IFNULL(SUM(RP.point), 0) AS pointSum,
+IFNULL(SUM(IF(RP.point > 0, RP.point, 0)), 0) AS pointUp,
+IFNULL(SUM(IF(RP.point < 0, RP.point, 0)), 0) AS pointDown
+FROM ( 
+	SELECT A.*, M.nickname AS writerName
+	FROM article AS A
+	INNER JOIN `member` AS M
+	ON A.memberId = M.id
+) AS A
+LEFT JOIN reactionPoint AS RP
+ON RP.relTypeCode = 'article'
+AND A.id = RP.relId
+GROUP BY A.id
+ORDER BY A.id DESC;

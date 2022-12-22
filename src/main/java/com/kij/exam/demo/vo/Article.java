@@ -16,6 +16,9 @@ public class Article {
 	private String title;
 	private String body;
 	private int viewCnt;
+	private int pointSum;
+	private int pointUp;
+	private int pointDown;
 	
 	private boolean actorCanChangeData;
 }

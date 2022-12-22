@@ -37,6 +37,7 @@
 						<th>작성자</th>
 						<th>날짜</th>
 						<th>조회수</th>
+						<th>추천</th>
 					</tr>
 				</thead>
 
@@ -48,6 +49,7 @@
 							<td>${article.writerName}</td>
 							<td>${article.regDate.substring(2, 16)}</td>
 							<td>${article.viewCnt}</td>
+							<td>${article.pointUp}</td>
 						</tr>
 					</c:forEach>
 				</tbody>
