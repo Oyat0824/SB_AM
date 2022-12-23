@@ -54,6 +54,24 @@
 						<td>${article.writerName}</td>
 					</tr>
 					<tr>
+						<th>좋아요 / 싫어요</th>
+						<td>
+							<div>
+								<button class="btn btn-success">
+									👍 좋아요 <span class="badge badge-primary ml-2">${article.pointUp }</span>
+								</button>
+								<div class="avatar placeholder tooltip" data-tip="총합">
+								  <div class="bg-neutral-focus text-neutral-content rounded-full w-16">
+								    <span class="text-xl"><span class="text-xl">${article.pointSum }</span></span>
+								  </div>
+								</div>
+								<button class="btn btn-warning">
+									👎 싫어요 <span class="badge badge-secondary ml-2">${article.pointDown }</span>
+								</button>
+							</div>
+						</td>
+					</tr>
+					<tr>
 						<th>조회수</th>
 						<td><span class="badge article-detail__view-count">${article.viewCnt}</span></td>
 					</tr>
