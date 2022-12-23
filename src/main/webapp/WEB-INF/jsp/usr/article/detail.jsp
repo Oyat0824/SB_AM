@@ -21,11 +21,27 @@
 			ajaxMode : 'Y'
 		}, function(data){
 			$('.article-detail__view-count').empty().html(data.data1);
-		}, 'json');
-		
+		}, 'json');	
+	}
+	
+	function ReactionPoint__getReactionPoint() {
+		$.get('../reactionPoint/getReactionPoint', {
+			id : params.id,
+			ajaxMode : 'Y'
+		}, function(data){
+			console.log(data);
+			
+			if(data.data1.pointSum > 0) {
+				$("#pointUp").removeClass('btn-outline');
+			} else if(data.data1.pointSum < 0) {
+				$("#pointDown").removeClass('btn-outline');
+			}
+			
+		}, 'json');	
 	}
 	
 	ArticleDetail__increaseViewCnt();
+	ReactionPoint__getReactionPoint();
 </script>
 
 <section class="mt-8 text-xl">
@@ -39,7 +55,7 @@
 				<tbody>
 					<tr>
 						<th>번호</th>
-						<td><div class="badge badge-lg">${article.id}</div></td>
+						<td><div class="badge badge-lg bg-purple-600 border-transparent font-bold text-white">${article.id}</div></td>
 					</tr>
 					<tr>
 						<th>작성 날짜</th>
@@ -54,26 +70,26 @@
 						<td>${article.writerName}</td>
 					</tr>
 					<tr>
-						<th>좋아요 / 싫어요</th>
+						<th>추천</th>
 						<td>
 							<div>
-								<button class="btn btn-success">
-									👍 좋아요 <span class="badge badge-primary ml-2">${article.pointUp }</span>
+								<button id="pointUp" class="btn btn-outline btn-success tooltip" data-tip="이 글이 좋다면 클릭!" onclick="location.href=''">
+									좋아요 <i class="fa-solid fa-thumbs-up"></i> <span class="badge badge-primary ml-2">${article.pointUp }</span>
 								</button>
 								<div class="avatar placeholder tooltip" data-tip="총합">
-								  <div class="bg-neutral-focus text-neutral-content rounded-full w-16">
-								    <span class="text-xl"><span class="text-xl">${article.pointSum }</span></span>
-								  </div>
+									<div class="bg-neutral-focus text-neutral-content rounded-full w-16">
+										<span class="text-xl"><span class="text-xl">${article.pointSum }</span></span>
+									</div>
 								</div>
-								<button class="btn btn-warning">
-									👎 싫어요 <span class="badge badge-secondary ml-2">${article.pointDown }</span>
+								<button id="pointDown" class="btn btn-outline btn-error tooltip" data-tip="이 글이 싫다면 클릭.." onclick="location.href=''">
+									싫어요 <i class="fa-solid fa-thumbs-down"></i> <span class="badge badge-secondary ml-2">${article.pointDown * -1 }</span>
 								</button>
 							</div>
 						</td>
 					</tr>
 					<tr>
 						<th>조회수</th>
-						<td><span class="badge article-detail__view-count">${article.viewCnt}</span></td>
+						<td><span class="badge badge-lg article-detail__view-count">${article.viewCnt}</span></td>
 					</tr>
 					<tr>
 						<th>제목</th>

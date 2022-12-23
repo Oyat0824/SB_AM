@@ -32,19 +32,19 @@
 			<table class="table table-zebra w-full">
 				<thead>
 					<tr>
-						<th>번호</th>
-						<th class="title">제목</th>
-						<th>작성자</th>
-						<th>날짜</th>
-						<th>조회수</th>
-						<th>추천</th>
+						<th class="text-sm">번호</th>
+						<th class="text-sm title">제목</th>
+						<th class="text-sm">작성자</th>
+						<th class="text-sm">날짜</th>
+						<th class="text-sm">조회수</th>
+						<th class="text-sm">추천</th>
 					</tr>
 				</thead>
 
 				<tbody>
 					<c:forEach var="article" items="${articles}">
 						<tr class="hover">
-							<td><div class="badge badge-lg">${article.id}</div></td>
+							<td><div class="badge badge-lg bg-purple-600 border-transparent font-bold text-white">${article.id}</div></td>
 							<td><a class="hover:text-yellow-500" href="detail?id=${article.id}">${article.title}</a></td>
 							<td>${article.writerName}</td>
 							<td>${article.regDate.substring(2, 16)}</td>
