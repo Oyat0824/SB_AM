@@ -32,16 +32,22 @@
 			console.log(data);
 			
 			if(data.data1.pointSum > 0) {
-				$("#pointUp").removeClass('btn-outline');
+				let pointUpBtn = $("#pointUp");
+				
+				pointUpBtn.removeClass('btn-outline');
+				pointUpBtn.attr("onclick", "location.href='취소요청'");
 			} else if(data.data1.pointSum < 0) {
-				$("#pointDown").removeClass('btn-outline');
+				let pointDownBtn = $("#pointDown");
+				
+				pointDownBtn.removeClass('btn-outline');
+				pointDownBtn.attr("onclick", "location.href='취소요청'");
 			}
 			
 		}, 'json');	
 	}
 	
-	ArticleDetail__increaseViewCnt();
 	ReactionPoint__getReactionPoint();
+	ArticleDetail__increaseViewCnt();
 </script>
 
 <section class="mt-8 text-xl">
@@ -73,15 +79,15 @@
 						<th>추천</th>
 						<td>
 							<div>
-								<button id="pointUp" class="btn btn-outline btn-success tooltip" data-tip="이 글이 좋다면 클릭!" onclick="location.href=''">
+								<button id="pointUp" class="btn btn-outline btn-success tooltip" data-tip="이 글이 좋다면 클릭!" onclick="location.href='../reactionPoint/doReactionPointUp?id=${article.id}'">
 									좋아요 <i class="fa-solid fa-thumbs-up"></i> <span class="badge badge-primary ml-2">${article.pointUp }</span>
 								</button>
-								<div class="avatar placeholder tooltip" data-tip="총합">
+								<div class="avatar placeholder tooltip" data-tip="총합 : ${article.pointSum }">
 									<div class="bg-neutral-focus text-neutral-content rounded-full w-16">
 										<span class="text-xl"><span class="text-xl">${article.pointSum }</span></span>
 									</div>
 								</div>
-								<button id="pointDown" class="btn btn-outline btn-error tooltip" data-tip="이 글이 싫다면 클릭.." onclick="location.href=''">
+								<button id="pointDown" class="btn btn-outline btn-error tooltip" data-tip="이 글이 싫다면 클릭.." onclick="location.href='../reactionPoint/doReactionPointDown?id=${article.id}'">
 									싫어요 <i class="fa-solid fa-thumbs-down"></i> <span class="badge badge-secondary ml-2">${article.pointDown * -1 }</span>
 								</button>
 							</div>

@@ -20,4 +20,12 @@ public class ReactionPointService {
 	public ReactionPoint getReactionPoint(int loginedMemberId, int id) {
 		return reactionPointRepository.getReactionPoint(loginedMemberId, id);
 	}
+
+	public int doReactionPointUp(int loginedMemberId, int id) {
+		return reactionPointRepository.doReactionPointUp(loginedMemberId, id);
+	}
+
+	public int doReactionPointDown(int loginedMemberId, int id) {
+		return reactionPointRepository.doReactionPointDown(loginedMemberId, id);
+	}
 }

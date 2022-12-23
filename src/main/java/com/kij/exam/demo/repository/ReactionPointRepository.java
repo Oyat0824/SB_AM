@@ -1,5 +1,6 @@
 package com.kij.exam.demo.repository;
 
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
@@ -17,7 +18,28 @@ public interface ReactionPointRepository {
 			AND memberId = #{loginedMemberId}
 			AND relId = #{id}
 			""")
-
 	ReactionPoint getReactionPoint(int loginedMemberId, int id);
+
+	@Insert("""
+			INSERT INTO reactionPoint
+			SET regDate = NOW(),
+			updateDate = NOW(),
+			memberId = #{loginedMemberId},
+			relTypeCode = 'article',
+			relId = #{id},
+			`point` = 1;
+			""")
+	int doReactionPointUp(int loginedMemberId, int id);
+	
+	@Insert("""
+			INSERT INTO reactionPoint
+			SET regDate = NOW(),
+			updateDate = NOW(),
+			memberId = #{loginedMemberId},
+			relTypeCode = 'article',
+			relId = #{id},
+			`point` = -1;
+			""")
+	int doReactionPointDown(int loginedMemberId, int id);
 
 }
