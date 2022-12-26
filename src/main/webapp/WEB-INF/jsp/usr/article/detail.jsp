@@ -7,6 +7,7 @@
 	const params = {};
 	params.id = parseInt('${param.id}');
 	
+	// 조회수 관련 AJAX
 	function ArticleDetail__increaseViewCnt() {
 		const localStorageKey = 'article__' + params.id + '__alreadyViews';
 		
@@ -24,30 +25,35 @@
 		}, 'json');	
 	}
 	
+	// 로그인 회원에 따른 리액션 버튼 정보 불러오기
 	function ReactionPoint__getReactionPoint() {
 		$.get('../reactionPoint/getReactionPoint', {
 			id : params.id,
+			relTypeCode : 'article',
 			ajaxMode : 'Y'
 		}, function(data){
-			console.log(data);
+			let pointUpBtn = $("#pointUp");
+			let pointDownBtn = $("#pointDown");
 			
+			// 좋아요 눌린 상태
 			if(data.data1.pointSum > 0) {
-				let pointUpBtn = $("#pointUp");
-				
 				pointUpBtn.removeClass('btn-outline');
-				pointUpBtn.attr("onclick", "location.href='취소요청'");
-			} else if(data.data1.pointSum < 0) {
-				let pointDownBtn = $("#pointDown");
-				
+				pointUpBtn.attr("onclick", "location.href='../reactionPoint/delReactionPoint?id=${article.id}&relTypeCode=article&point=1'");
+			}
+			// 싫어요 눌린 상태
+			else if(data.data1.pointSum < 0) {
 				pointDownBtn.removeClass('btn-outline');
-				pointDownBtn.attr("onclick", "location.href='취소요청'");
+				pointDownBtn.attr("onclick", "location.href='../reactionPoint/delReactionPoint?id=${article.id}&relTypeCode=article&point=-1'");
 			}
 			
 		}, 'json');	
 	}
 	
-	ReactionPoint__getReactionPoint();
-	ArticleDetail__increaseViewCnt();
+	
+	$(function() {
+		ReactionPoint__getReactionPoint();
+		ArticleDetail__increaseViewCnt();
+	});
 </script>
 
 <section class="mt-8 text-xl">
@@ -79,7 +85,7 @@
 						<th>추천</th>
 						<td>
 							<div>
-								<button id="pointUp" class="btn btn-outline btn-success tooltip" data-tip="이 글이 좋다면 클릭!" onclick="location.href='../reactionPoint/doReactionPointUp?id=${article.id}'">
+								<button id="pointUp" class="btn btn-outline btn-success tooltip" data-tip="이 글이 좋다면 클릭!" onclick="location.href='../reactionPoint/doReactionPoint?id=${article.id}&relTypeCode=article&point=1'">
 									좋아요 <i class="fa-solid fa-thumbs-up"></i> <span class="badge badge-primary ml-2">${article.pointUp }</span>
 								</button>
 								<div class="avatar placeholder tooltip" data-tip="총합 : ${article.pointSum }">
@@ -87,7 +93,7 @@
 										<span class="text-xl"><span class="text-xl">${article.pointSum }</span></span>
 									</div>
 								</div>
-								<button id="pointDown" class="btn btn-outline btn-error tooltip" data-tip="이 글이 싫다면 클릭.." onclick="location.href='../reactionPoint/doReactionPointDown?id=${article.id}'">
+								<button id="pointDown" class="btn btn-outline btn-error tooltip" data-tip="이 글이 싫다면 클릭.." onclick="location.href='../reactionPoint/doReactionPoint?id=${article.id}&relTypeCode=article&point=-1'">
 									싫어요 <i class="fa-solid fa-thumbs-down"></i> <span class="badge badge-secondary ml-2">${article.pointDown * -1 }</span>
 								</button>
 							</div>

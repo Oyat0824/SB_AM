@@ -16,16 +16,21 @@ public class ReactionPointService {
 	public ReactionPointService(ReactionPointRepository reactionPointRepository) {
 		this.reactionPointRepository = reactionPointRepository;
 	}
-
-	public ReactionPoint getReactionPoint(int loginedMemberId, int id) {
-		return reactionPointRepository.getReactionPoint(loginedMemberId, id);
+	
+	// 리액션 정보 조회
+	public ReactionPoint getReactionPoint(int loginedMemberId, String relTypeCode, int id) {
+		return reactionPointRepository.getReactionPoint(loginedMemberId, relTypeCode, id);
 	}
 
-	public int doReactionPointUp(int loginedMemberId, int id) {
-		return reactionPointRepository.doReactionPointUp(loginedMemberId, id);
+	// 리액션 (좋아요/싫어요)
+	public void doReactionPoint(int loginedMemberId, int id, String relTypeCode, int point) {
+		reactionPointRepository.doReactionPoint(loginedMemberId, id, relTypeCode, point);
 	}
 
-	public int doReactionPointDown(int loginedMemberId, int id) {
-		return reactionPointRepository.doReactionPointDown(loginedMemberId, id);
+	// 리액션 취소 (좋아요/싫어요)
+	public void delReactionPoint(int loginedMemberId, String relTypeCode, int id) {
+		reactionPointRepository.delReactionPoint(loginedMemberId, relTypeCode, id);
 	}
+
+	
 }

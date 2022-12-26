@@ -1,5 +1,6 @@
 package com.kij.exam.demo.repository;
 
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -14,32 +15,29 @@ public interface ReactionPointRepository {
 			IFNULL(SUM(IF(`point` > 0, `point`, 0)), 0) AS pointUp,
 			IFNULL(SUM(IF(`point` < 0, `point`, 0)), 0) AS pointDown
 			FROM reactionPoint
-			WHERE relTypeCode = 'article'
+			WHERE relTypeCode = #{relTypeCode}
 			AND memberId = #{loginedMemberId}
 			AND relId = #{id}
 			""")
-	ReactionPoint getReactionPoint(int loginedMemberId, int id);
+	ReactionPoint getReactionPoint(int loginedMemberId, String relTypeCode, int id);
 
 	@Insert("""
 			INSERT INTO reactionPoint
 			SET regDate = NOW(),
 			updateDate = NOW(),
 			memberId = #{loginedMemberId},
-			relTypeCode = 'article',
+			relTypeCode = #{relTypeCode},
 			relId = #{id},
-			`point` = 1;
+			`point` = #{point};
 			""")
-	int doReactionPointUp(int loginedMemberId, int id);
-	
-	@Insert("""
-			INSERT INTO reactionPoint
-			SET regDate = NOW(),
-			updateDate = NOW(),
-			memberId = #{loginedMemberId},
-			relTypeCode = 'article',
-			relId = #{id},
-			`point` = -1;
+	void doReactionPoint(int loginedMemberId, int id, String relTypeCode, int point);
+
+	@Delete("""
+			DELETE FROM reactionPoint
+			WHERE relTypeCode = #{relTypeCode}
+			AND memberId = #{loginedMemberId}
+			AND relId = #{id}
 			""")
-	int doReactionPointDown(int loginedMemberId, int id);
+	void delReactionPoint(int loginedMemberId, String relTypeCode, int id);
 
 }
