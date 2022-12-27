@@ -67,6 +67,8 @@ CREATE TABLE reply (
 	`body` TEXT NOT NULL
 );
 
+ALTER TABLE `SB_AM`.`reply` ADD INDEX (`relTypeCode` , `relId`);
+
 # 테이블 조회
 SELECT * FROM `member`;
 SELECT * FROM `board`;

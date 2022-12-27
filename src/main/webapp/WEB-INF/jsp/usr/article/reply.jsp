@@ -1,0 +1,47 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+
+<script>
+	const ReplyWrite__submitForm = function(form) {
+		form.body.value = form.body.value.trim();
+		form.relId.value = form.relId.value.trim();
+		
+		if(form.body.value.length < 2) {
+			alert("2글자 이상 작성해주세요.");
+			form.body.focus();
+			return false;
+		}
+		
+		if(form.relId.value != ${article.id}) {
+			alert("잘못된 접근 방식입니다.");
+			location.reload();
+			return false;
+		}
+		
+		form.submit();
+	}
+</script>
+
+<section class="mt-8 text-xl">
+	<div class="container mx-auto px-3 pt-5 border-t border-gray-400">
+		<h2>댓글</h2>
+		
+		<div class="py-2 pl-16 border-b text-base">
+			<div class="font-semibold"><span>작성자</span></div>
+			<div><span>내용</span></div>
+			<div class="text-sm text-gray-400">날짜</div>
+		</div>
+		
+		<c:if test="${rq.getLoginedMemberId() != 0}">
+			<form action="../reply/doWrite" method="GET" onsubmit="return ReplyWrite__submitForm(this);">
+				<input type="hidden" name="relTypeCode" value="article" />
+				<input type="hidden" name="relId" value="${article.id }" />
+				<div class="mt-5 p-5 w-full">
+					<h2 class="mb-2">✍ 댓글 쓰기 :: ${rq.getLoginedMemberId() }</h2>
+					<textarea class="textarea textarea-info w-full h-24" name="body"></textarea>
+					<div class="flex justify-end mt-1"><button class="btn btn-outline btn-sm">작성</button></div>
+				</div>
+			</form>
+		</c:if>
+	</div>
+</section>

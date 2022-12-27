@@ -12,7 +12,7 @@
 		const localStorageKey = 'article__' + params.id + '__alreadyViews';
 		
 		if(localStorage.getItem(localStorageKey)) {
-			return;
+			return false;
 		}
 		
 		localStorage.setItem(localStorageKey, true);
@@ -125,4 +125,5 @@
 		</div>
 	</div>
 </section>
+<%@ include file="./reply.jsp"%>
 <%@ include file="../common/foot.jsp"%>
