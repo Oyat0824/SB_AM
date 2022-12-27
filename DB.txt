@@ -3,16 +3,6 @@ DROP DATABASE IF EXISTS SB_AM;
 CREATE DATABASE SB_AM;
 USE SB_AM;
 
-# article 테이블 생성
-CREATE TABLE article(
-	id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
-	regDate DATETIME NOT NULL,
-	updateDate DATETIME NOT NULL,
-	memberId INT UNSIGNED NOT NULL,
-	title VARCHAR(200) NOT NULL,
-	`body` TEXT NOT NULL
-);
-
 # member 테이블 생성
 CREATE TABLE `member`(
 	id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -40,6 +30,21 @@ CREATE TABLE board(
 	delDate DATETIME COMMENT '삭제 날짜'
 );
 
+# article 테이블 생성
+CREATE TABLE article(
+	id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	regDate DATETIME NOT NULL,
+	updateDate DATETIME NOT NULL,
+	memberId INT UNSIGNED NOT NULL,
+	title VARCHAR(200) NOT NULL,
+	`body` TEXT NOT NULL
+);
+
+# article 테이블에 boardId 컬럼 추가
+ALTER TABLE article ADD COLUMN boardId INT UNSIGNED NOT NULL AFTER `memberId`;
+# article 테이블에 viewCnt 컬럼 추가
+ALTER TABLE article ADD COLUMN viewCnt INT UNSIGNED NOT NULL DEFAULT 0;
+
 # reactionPoint 테이블 생성
 CREATE TABLE reactionPoint (
 	id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -51,91 +56,25 @@ CREATE TABLE reactionPoint (
 	`point` SMALLINT NOT NULL
 );
 
-# reactionPoint 데이터 삽입
-INSERT INTO reactionPoint
-SET regDate = NOW(),
-updateDate = NOW(),
-memberId = 1,
-relTypeCode = 'article',
-relId = 2,
-`point` = 1;
+# reply 테이블 생성
+CREATE TABLE reply (
+	id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	regDate DATETIME NOT NULL,
+	updateDate DATETIME NOT NULL,
+	memberId INT UNSIGNED NOT NULL,
+	relTypeCode VARCHAR(20) NOT NULL COMMENT '관련 데이터 타입 코드',
+	relId INT UNSIGNED NOT NULL COMMENT '관련 데이터 번호',
+	`body` TEXT NOT NULL
+);
 
-INSERT INTO reactionPoint
-SET regDate = NOW(),
-updateDate = NOW(),
-memberId = 2,
-relTypeCode = 'article',
-relId = 2,
-`point` = 1;
-
-INSERT INTO reactionPoint
-SET regDate = NOW(),
-updateDate = NOW(),
-memberId = 3,
-relTypeCode = 'article',
-relId = 2,
-`point` = -1;
-
-# board 테이블 조회
-SELECT * FROM `board`;
-DESC `board`;
-
-# article 테이블 조회
-SELECT * FROM article;
-DESC article;
-
-# reactionPoint 테이블 조회
-SELECT * FROM reactionPoint;
-DESC reactionPoint;
-
-# member 테이블 조회
+# 테이블 조회
 SELECT * FROM `member`;
-DESC `member`;
+SELECT * FROM `board`;
+SELECT * FROM article;
+SELECT * FROM reactionPoint;
+SELECT * FROM reply;
 
-# board 데이터 추가
-INSERT INTO `board`
-SET regDate = NOW(),
-updateDate = NOW(),
-`code` = 'notice',
-`name` = '공지사항';
-
-INSERT INTO `board`
-SET regDate = NOW(),
-updateDate = NOW(),
-`code` = 'free',
-`name` = '자유';
-
-# article 테이블에 boardId 컬럼 추가
-ALTER TABLE article ADD COLUMN boardId INT UNSIGNED NOT NULL AFTER `memberId`;
-# article 테이블에 viewCnt 컬럼 추가
-ALTER TABLE article ADD COLUMN viewCnt INT UNSIGNED NOT NULL DEFAULT 0;
-
-# article 데이터 추가
-INSERT INTO article
-SET regDate = NOW(),
-updateDate = NOW(),
-memberId = 1,
-boardId = 1,
-title = '제목1',
-`body` = '내용1';
-
-INSERT INTO article
-SET regDate = NOW(),
-updateDate = NOW(),
-memberId = 2,
-boardId = 2,
-title = '제목2',
-`body` = '내용2';
-
-INSERT INTO article
-SET regDate = NOW(),
-updateDate = NOW(),
-memberId = 3,
-boardId = 2,
-title = '제목3',
-`body` = '내용3';
-
-# member 데이터 추가
+############ member 데이터 추가
 INSERT INTO `member`
 SET regDate = NOW(),
 updateDate = NOW(),
@@ -166,6 +105,96 @@ loginPw = 'test2',
 `nickname` = '유저2',
 cellphoneNum = '01033334444',
 email = 'langue0824@gmail.com';
+
+############ board 데이터 추가
+INSERT INTO `board`
+SET regDate = NOW(),
+updateDate = NOW(),
+`code` = 'notice',
+`name` = '공지사항';
+
+INSERT INTO `board`
+SET regDate = NOW(),
+updateDate = NOW(),
+`code` = 'free',
+`name` = '자유';
+
+############ article 데이터 추가
+INSERT INTO article
+SET regDate = NOW(),
+updateDate = NOW(),
+memberId = 1,
+boardId = 1,
+title = '제목1',
+`body` = '내용1';
+
+INSERT INTO article
+SET regDate = NOW(),
+updateDate = NOW(),
+memberId = 2,
+boardId = 2,
+title = '제목2',
+`body` = '내용2';
+
+INSERT INTO article
+SET regDate = NOW(),
+updateDate = NOW(),
+memberId = 3,
+boardId = 2,
+title = '제목3',
+`body` = '내용3';
+
+# reactionPoint 데이터 삽입
+INSERT INTO reactionPoint
+SET regDate = NOW(),
+updateDate = NOW(),
+memberId = 1,
+relTypeCode = 'article',
+relId = 2,
+`point` = 1;
+
+INSERT INTO reactionPoint
+SET regDate = NOW(),
+updateDate = NOW(),
+memberId = 2,
+relTypeCode = 'article',
+relId = 2,
+`point` = 1;
+
+INSERT INTO reactionPoint
+SET regDate = NOW(),
+updateDate = NOW(),
+memberId = 3,
+relTypeCode = 'article',
+relId = 2,
+`point` = -1;
+
+############ reply 데이터 삽입
+INSERT INTO reply
+SET regDate = NOW(),
+updateDate = NOW(),
+memberId = 1,
+relTypeCode = 'article',
+relId = 2,
+`body` = '댓글 1';
+
+INSERT INTO reply
+SET regDate = NOW(),
+updateDate = NOW(),
+memberId = 2,
+relTypeCode = 'article',
+relId = 3,
+`body` = '댓글 2';
+
+INSERT INTO reply
+SET regDate = NOW(),
+updateDate = NOW(),
+memberId = 3,
+relTypeCode = 'article',
+relId = 3,
+`body` = '댓글 3';
+
+############################################################
 
 SELECT LAST_INSERT_ID();
 
@@ -220,5 +249,17 @@ IFNULL(SUM(IF(`point` > 0, `point`, 0)), 0) AS pointUp,
 IFNULL(SUM(IF(`point` < 0, `point`, 0)), 0) AS pointDown
 FROM reactionPoint
 WHERE relTypeCode = 'article'
-AND memberId = 3
-AND relId = 4;
+AND relId = 2;
+
+DELETE FROM reactionPoint
+WHERE relTypeCode = 'article'
+AND memberId = 1
+AND relId = 2;
+
+SELECT
+IFNULL(SUM(`point`), 0) AS pointSum,
+IFNULL(SUM(IF(`point` > 0, `point`, 0)), 0) AS pointUp,
+IFNULL(SUM(IF(`point` < 0, `point`, 0)), 0) AS pointDown
+FROM reactionPoint
+WHERE relTypeCode = 'article'
+AND relId = 2;
