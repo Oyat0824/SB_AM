@@ -24,13 +24,16 @@
 
 <section class="mt-8 text-xl">
 	<div class="container mx-auto px-3 pt-5 border-t border-gray-400">
-		<h2>댓글</h2>
+		<h2>댓글<span class="text-base">(${replies.size()} 개)</span></h2>
 		
-		<div class="py-2 pl-16 border-b text-base">
-			<div class="font-semibold"><span>작성자</span></div>
-			<div><span>내용</span></div>
-			<div class="text-sm text-gray-400">날짜</div>
-		</div>
+		<c:forEach var="reply" items="${replies}">
+			<div class="py-2 pl-16 border-b text-base">
+				<div class="font-semibold"><span>${reply.writerName }</span></div>
+				<div><span>${reply.body }</span></div>
+				<div class="text-sm text-gray-400">${reply.updateDate }</div>
+			</div>
+		</c:forEach>
+		
 		
 		<c:if test="${rq.getLoginedMemberId() != 0}">
 			<form action="../reply/doWrite" method="GET" onsubmit="return ReplyWrite__submitForm(this);">

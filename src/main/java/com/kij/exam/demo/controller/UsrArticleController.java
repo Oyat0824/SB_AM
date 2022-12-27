@@ -11,9 +11,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kij.exam.demo.service.ArticleService;
 import com.kij.exam.demo.service.BoardService;
+import com.kij.exam.demo.service.ReplyService;
 import com.kij.exam.demo.util.Utility;
 import com.kij.exam.demo.vo.Article;
 import com.kij.exam.demo.vo.Board;
+import com.kij.exam.demo.vo.Reply;
 import com.kij.exam.demo.vo.ResultData;
 import com.kij.exam.demo.vo.Rq;
 
@@ -22,13 +24,15 @@ public class UsrArticleController {
 	// 인스턴스 변수
 	private ArticleService articleService;
 	private BoardService boardService;
+	private ReplyService replyService;
 	private Rq rq;
 
 	// 생성자 주입
 	@Autowired
-	public UsrArticleController(ArticleService articleService, BoardService boardService, Rq rq) {
+	public UsrArticleController(ArticleService articleService, BoardService boardService, ReplyService replyService, Rq rq) {
 		this.articleService = articleService;
 		this.boardService = boardService;
+		this.replyService = replyService;
 		this.rq = rq;
 	}
 
@@ -119,7 +123,10 @@ public class UsrArticleController {
 	public String showDetail(Model model, int id) {
 		Article article = articleService.getForPrintArticle(rq.getLoginedMemberId(), id);
 		
+		List<Reply> replies = replyService.getForPrintReplies("article", id);
+		
 		model.addAttribute("article", article);
+		model.addAttribute("replies", replies);
 
 		return "usr/article/detail";
 	}
