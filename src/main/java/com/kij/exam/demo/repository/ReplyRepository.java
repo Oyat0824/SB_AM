@@ -2,6 +2,7 @@ package com.kij.exam.demo.repository;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -19,7 +20,7 @@ public interface ReplyRepository {
 				relId = #{relId},
 				`body` = #{body};
 			""")
-	void writeReply(int loginedMemberId, int relId, String relTypeCode, String body);
+	void writeReply(int loginedMemberId, String relTypeCode, int relId, String body);
 
 	@Select("""
 			SELECT R.*, M.nickname As writerName
@@ -27,8 +28,21 @@ public interface ReplyRepository {
 			INNER JOIN `member` AS M
 			ON R.memberId = M.id
 			WHERE R.relTypeCode = #{relTypeCode}
-			AND R.relId = #{id}
+			AND R.relId = #{relId}
 			ORDER BY R.id;
 			""")
-	List<Reply> getForPrintReplies(String relTypeCode, int id);
+	List<Reply> getForPrintReplies(String relTypeCode, int relId);
+	
+	@Select("""
+			SELECT *
+			FROM reply
+			WHERE id = #{id}
+			""")
+	Reply getReply(int id);
+	
+	@Delete("""
+			DELETE FROM reply
+			WHERE id = #{id}
+			""")
+	void deleteReply(int id);
 }

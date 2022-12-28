@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kij.exam.demo.service.ReplyService;
 import com.kij.exam.demo.util.Utility;
+import com.kij.exam.demo.vo.Reply;
+import com.kij.exam.demo.vo.ResultData;
 import com.kij.exam.demo.vo.Rq;
 
 @Controller
@@ -26,14 +28,26 @@ public class UsrReplyController {
 	// 작성
 	@RequestMapping("/usr/reply/doWrite") // 주소
 	@ResponseBody // 실행할 몸통
-	public String doWrite(int relId, String relTypeCode, String body) {
-		// 잘못된 relTypeCode 검증
-		if (!relTypeCode.equals("article")) {
-			return Utility.jsHistoryBack("잘못된 방식으로 접근하셨습니다!");
-		}
-
-		replyService.writeReply(rq.getLoginedMemberId(), relId, relTypeCode, body);
+	public String doWrite(String relTypeCode, int relId, String body) {
+		replyService.writeReply(rq.getLoginedMemberId(), relTypeCode, relId, body);
 
 		return Utility.jsReplace(Utility.f("댓글을 작성했습니다"), Utility.f("../article/detail?id=%d", relId));
+	}
+
+	// 삭제
+	@RequestMapping("/usr/reply/doDelete") // 주소
+	@ResponseBody // 실행할 몸통
+	public String doDelete(int id) {
+		Reply reply = replyService.getReply(id);
+
+		ResultData actorCanMDRd = replyService.actorCanMD(rq.getLoginedMemberId(), reply);
+
+		if (actorCanMDRd.isFail()) {
+			return Utility.jsHistoryBack(actorCanMDRd.getMsg());
+		}
+
+		replyService.deleteReply(id);
+
+		return Utility.jsReplace(Utility.f("댓글을 삭제했습니다"), Utility.f("../article/detail?id=%d", reply.getRelId() ));
 	}
 }

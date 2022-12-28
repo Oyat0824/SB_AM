@@ -12,7 +12,7 @@
 			return false;
 		}
 		
-		if(form.relId.value != ${article.id}) {
+		if(form.relId.value != ${article.id} || form.relTypeCode.value != "article") {
 			alert("잘못된 접근 방식입니다.");
 			location.reload();
 			return false;
@@ -24,24 +24,23 @@
 
 <section class="mt-8 text-xl">
 	<div class="container mx-auto px-3 pt-5 border-t border-gray-400">
-		<h2>댓글<span class="text-base">(${replies.size()} 개)</span></h2>
+		<h2>댓글<span class="text-base">(${replies.size()}개)</span></h2>
 		
 		<c:forEach var="reply" items="${replies}">
-			<div class="py-2 pl-16 border-b text-base relative text-md-set">
-				<div class="font-semibold"><span class="${reply.memberId == rq.loginedMember.id ? 'text-green-500' : '' }">${reply.writerName }</span></div>
+			<div class="py-2 pl-16 border-b text-base relative comment-set hover:bg-gray-50">
+				<div class="font-semibold"><span class="${reply.actorCanChangeData ? 'text-green-500' : '' }">${reply.writerName }</span></div>
 				<div><span>${reply.getForPrintBody() }</span></div>
 				<div class="text-sm text-gray-400">${reply.updateDate }</div>
 				
-				<c:if test="${reply.memberId == rq.loginedMember.id}">
-					<div class="text-sm absolute top-3 right-5 transition opacity-0 invisible text-md-call">
-						<a href="" class="hover:text-red-300 hover:underline">수정</a>
-						<a href="" class="hover:text-red-300 hover:underline">삭제</a>
+				<c:if test="${reply.actorCanChangeData}">
+					<div class="text-sm absolute top-3 right-5 transition opacity-0 invisible comment-call">
+						<a href='javascript:void(0);' class="hover:text-red-300 hover:underline">수정</a>
+						<a href='../reply/doDelete?id=${reply.id}' onclick="return confirm('삭제하시겠습니까?')" class="hover:text-red-300 hover:underline">삭제</a>
 					</div>
 				</c:if>
 			</div>
 		</c:forEach>
-		
-		
+
 		<c:if test="${rq.getLoginedMemberId() != 0}">
 			<form action="../reply/doWrite" method="GET" onsubmit="return ReplyWrite__submitForm(this);">
 				<input type="hidden" name="relTypeCode" value="article" />

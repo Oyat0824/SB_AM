@@ -21,7 +21,7 @@ html > body {
 	width: 100%;
 }
 
-.text-md-set:hover .text-md-call {
+.comment-set:hover .comment-call {
 	opacity: 1;
 	visibility: visible;
 }
