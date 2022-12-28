@@ -20,3 +20,8 @@ html > body {
 .table-box-type-1 > table th.title {
 	width: 100%;
 }
+
+.text-md-set:hover .text-md-call {
+	opacity: 1;
+	visibility: visible;
+}

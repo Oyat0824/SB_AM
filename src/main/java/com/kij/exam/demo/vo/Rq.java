@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
 
+import com.kij.exam.demo.service.MemberService;
 import com.kij.exam.demo.util.Utility;
 
 import lombok.Getter;
@@ -19,34 +20,35 @@ import lombok.Getter;
 public class Rq {
 	@Getter
 	private int loginedMemberId;
+	@Getter
+	private Member loginedMember;
 	private HttpServletRequest req;
 	private HttpServletResponse res;
 	private HttpSession session;
 
-	public Rq(HttpServletRequest req, HttpServletResponse res) {
+	public Rq(HttpServletRequest req, HttpServletResponse res, MemberService memberService) {
 		this.req = req;
 		this.res = res;
-
-		// 세션 넣기
-		this.session = req.getSession();
-
-		// 로그인 멤버 아이디 검증
+		this.session = req.getSession();	// 세션 넣기
+		
+		// 변수 초기화
 		int loginedMemberId = 0;
+		Member loginedMember = null;
 
 		if (session.getAttribute("loginedMemberId") != null) {
 			loginedMemberId = (int) session.getAttribute("loginedMemberId");
+			loginedMember = memberService.getMemberById(loginedMemberId);
 		}
 
 		this.loginedMemberId = loginedMemberId;
-
+		this.loginedMember = loginedMember;
+		
 		this.req.setAttribute("rq", this);
 	}
 	
 	// 해당 메서드는 Rq 객체의 생성을 유도함
 	// 편의를 위해 BeforeActionInterceptor 에서 호출
-	public void initOnBeforeActionInterceptor() {
-		
-	}
+	public void initOnBeforeActionInterceptor() { }
 
 	public void jsPrintHistoryBack(String msg) {
 		res.setContentType("text/html; charset=UTF-8");

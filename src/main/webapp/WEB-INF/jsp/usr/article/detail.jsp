@@ -109,7 +109,7 @@
 					</tr>
 					<tr>
 						<th>내용</th>
-						<td>${article.body}</td>
+						<td>${article.getForPrintBody()}</td>
 					</tr>
 				</tbody>
 			</table>

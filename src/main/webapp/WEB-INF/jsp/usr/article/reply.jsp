@@ -27,10 +27,17 @@
 		<h2>댓글<span class="text-base">(${replies.size()} 개)</span></h2>
 		
 		<c:forEach var="reply" items="${replies}">
-			<div class="py-2 pl-16 border-b text-base">
-				<div class="font-semibold"><span>${reply.writerName }</span></div>
-				<div><span>${reply.body }</span></div>
+			<div class="py-2 pl-16 border-b text-base relative text-md-set">
+				<div class="font-semibold"><span class="${reply.memberId == rq.loginedMember.id ? 'text-green-500' : '' }">${reply.writerName }</span></div>
+				<div><span>${reply.getForPrintBody() }</span></div>
 				<div class="text-sm text-gray-400">${reply.updateDate }</div>
+				
+				<c:if test="${reply.memberId == rq.loginedMember.id}">
+					<div class="text-sm absolute top-3 right-5 transition opacity-0 invisible text-md-call">
+						<a href="" class="hover:text-red-300 hover:underline">수정</a>
+						<a href="" class="hover:text-red-300 hover:underline">삭제</a>
+					</div>
+				</c:if>
 			</div>
 		</c:forEach>
 		
@@ -40,7 +47,7 @@
 				<input type="hidden" name="relTypeCode" value="article" />
 				<input type="hidden" name="relId" value="${article.id }" />
 				<div class="mt-5 p-5 w-full">
-					<h2 class="mb-2">✍ 댓글 쓰기 :: ${rq.getLoginedMemberId() }</h2>
+					<h2 class="mb-2">✍ 댓글 쓰기 :: ${rq.loginedMember.nickname }</h2>
 					<textarea class="textarea textarea-info w-full h-24" name="body"></textarea>
 					<div class="flex justify-end mt-1"><button class="btn btn-outline btn-sm">작성</button></div>
 				</div>

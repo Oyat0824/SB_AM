@@ -21,4 +21,8 @@ public class Article {
 	private int pointDown;
 	
 	private boolean actorCanChangeData;
+	
+	public String getForPrintBody() {
+		return this.body.replaceAll("\n", "<br />");
+	}
 }
