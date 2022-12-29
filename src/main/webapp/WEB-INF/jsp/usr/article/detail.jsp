@@ -22,7 +22,7 @@
 			ajaxMode : 'Y'
 		}, function(data){
 			$('.article-detail__view-count').empty().html(data.data1);
-		}, 'json');	
+		}, 'json');
 	}
 	
 	// 로그인 회원에 따른 리액션 버튼 정보 불러오기

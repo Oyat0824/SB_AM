@@ -29,11 +29,11 @@ public class ReplyService {
 	// 댓글 목록
 	public List<Reply> getForPrintReplies(int loginedMemberId, String relTypeCode, int relId) {
 		List<Reply> replies = replyRepository.getForPrintReplies(relTypeCode, relId);
-		
-		for(Reply reply : replies) {
+
+		for (Reply reply : replies) {
 			actorCanChangeData(loginedMemberId, reply);
 		}
-		
+
 		return replies;
 	}
 
@@ -69,4 +69,13 @@ public class ReplyService {
 		replyRepository.deleteReply(id);
 	}
 
+	// 댓글 수정
+	public void modifyReply(int id, String body) {
+		replyRepository.modifyReply(id, body);
+	}
+
+	// 댓글 조회
+	public Reply getForPrintReply(int id) {
+		return replyRepository.getForPrintReply(id);
+	}
 }

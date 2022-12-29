@@ -65,10 +65,6 @@ public class UsrMemberController {
 	@RequestMapping("/usr/member/doLogin")
 	@ResponseBody
 	public String doLogin(String loginId, String loginPw) {
-		// 로그인 중복 검사
-		if (rq.getLoginedMemberId() != 0) {
-			return Utility.jsReplace("이미 로그인하셨습니다!", "/");
-		}
 		// 유효성 검사
 		if (Utility.empty(loginId)) {
 			return Utility.jsHistoryBack("아이디를 입력해주세요!");
@@ -95,11 +91,6 @@ public class UsrMemberController {
 	// 로그인 페이지
 	@RequestMapping("/usr/member/login")
 	public String showLogin() {
-		// 로그인 중복 검사
-		if (rq.getLoginedMemberId() != 0) {
-			return rq.jsReturnOnView("이미 로그인 상태입니다!", true);
-		}
-		
 		return "usr/member/login";
 	}
 

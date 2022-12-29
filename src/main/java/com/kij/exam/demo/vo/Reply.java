@@ -20,6 +20,6 @@ public class Reply {
 	private boolean actorCanChangeData;
 	
 	public String getForPrintBody() {
-		return this.body.replaceAll("\n", "<br />");
+		return this.body.replaceAll("\r\n", "<br />");
 	}
 }
