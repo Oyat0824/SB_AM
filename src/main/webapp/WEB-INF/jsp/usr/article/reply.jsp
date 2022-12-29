@@ -24,22 +24,40 @@
 		form.submit();
 	}
 	
+	let originalIndex = null;
+	let originalForm = null;
+	
+	const ReplyModify__cancel = function(idx) {
+		const replyContent = $("#reply_" + idx);
+		replyContent.html(originalForm);
+		replyContent.addClass("pl-16").removeClass("px-5");
+		
+		originalForm = null;
+		originalIndex = null;
+	}
+	
 	const ReplyModify__getForm = function(replyId, idx) {
+		if(originalForm != null) {
+			ReplyModify__cancel(originalIndex);
+		}
+		
 		$.get('../reply/getModifyForm', {
 			id : replyId,
 			ajaxMode : 'Y'
 		}, function(data){
 			const replyContent = $("#reply_" + idx);
+			originalIndex = idx;
+			originalForm = replyContent.html();
 			replyContent.removeClass("pl-16").addClass("px-5");
 			
 			const modifyForm = `
 			<form action="../reply/doModify" method="GET" onsubmit="return ReplyWrite__submitForm(this);">
-				<input type="hidden" name="id" value="`+ data.data1.id +`" />
+				<input type="hidden" name="id" value="\${data.data1.id}" />
 				<div class="my-5 p-5 w-full border">
-					<h2 class="mb-2 text-sm">✍ 댓글 수정 :: `+ data.data1.writerName +`</h2>
-					<textarea class="textarea textarea-info w-full h-20" name="body">`+ data.data1.body +`</textarea>
+					<h2 class="mb-2 text-sm">✍ 댓글 수정 :: \${data.data1.writerName}</h2>
+					<textarea class="textarea textarea-info w-full h-20" name="body">\${data.data1.body}</textarea>
 					<div class="flex justify-end mt-1">
-						<button type="button" class="mr-2 btn btn-outline btn-sm" onclick="location.href='detail?id=`+data.data1.relId+`'">취소</button>
+						<button type="button" class="mr-2 btn btn-outline btn-sm" onclick="ReplyModify__cancel(\${idx})">취소</button>
 						<button type="submit" class="btn btn-outline btn-sm">수정</button>
 					</div>
 				</div>
