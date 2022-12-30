@@ -45,7 +45,7 @@
 					<c:forEach var="article" items="${articles}">
 						<tr class="hover">
 							<td><div class="badge badge-lg bg-purple-600 border-transparent font-bold text-white">${article.id}</div></td>
-							<td><a class="hover:text-yellow-500" href="detail?id=${article.id}">${article.title}</a></td>
+							<td><a class="hover:text-yellow-500" href="detail?id=${article.id}">${article.title}</a><span class="text-base text-gray-500 align-text-top">[${article.replyCount }]</span></td>
 							<td>${article.writerName}</td>
 							<td>${article.regDate.substring(2, 16)}</td>
 							<td>${article.viewCnt}</td>

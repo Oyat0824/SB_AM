@@ -19,6 +19,7 @@ public class Article {
 	private int pointSum;
 	private int pointUp;
 	private int pointDown;
+	private int replyCount;
 	
 	private boolean actorCanChangeData;
 	
