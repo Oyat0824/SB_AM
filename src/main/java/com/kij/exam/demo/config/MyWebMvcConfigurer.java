@@ -37,18 +37,29 @@ public class MyWebMvcConfigurer implements WebMvcConfigurer {
 		ir.excludePathPatterns("/error");
 
 		ir = registry.addInterceptor(needLoginInterceptor);
+		// 로그아웃
 		ir.addPathPatterns("/usr/member/doLogout");
+		// 게시판 관련
 		ir.addPathPatterns("/usr/article/write");
 		ir.addPathPatterns("/usr/article/doWrite");
 		ir.addPathPatterns("/usr/article/doDelete");
 		ir.addPathPatterns("/usr/article/modify");
 		ir.addPathPatterns("/usr/article/doModify");
+		// 추천 관련
 		ir.addPathPatterns("/usr/reactionPoint/doReactionPoint");
 		ir.addPathPatterns("/usr/reactionPoint/delReactionPoint");
 		ir.addPathPatterns("/usr/reply/doWrite");
 		ir.addPathPatterns("/usr/reply/doDelete");
 		ir.addPathPatterns("/usr/reply/doModify");
-		ir.addPathPatterns("/usr/reply/getModifyForm");
+		ir.addPathPatterns("/usr/reply/getReplyContent");
+		// 마이페이지 관련
+		ir.addPathPatterns("/usr/member/myPage");
+		ir.addPathPatterns("/usr/member/checkPassword");
+		ir.addPathPatterns("/usr/member/doCheckPassword");
+		ir.addPathPatterns("usr/member/modify");
+		ir.addPathPatterns("usr/member/doModify");
+		ir.addPathPatterns("usr/member/passwordModify");
+		ir.addPathPatterns("usr/member/doPasswordModify");
 		
 		ir = registry.addInterceptor(needLogoutInterceptor);
 		ir.addPathPatterns("/usr/member/login");

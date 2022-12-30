@@ -3,6 +3,7 @@ package com.kij.exam.demo.repository;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import com.kij.exam.demo.vo.Member;
 
@@ -50,6 +51,34 @@ public interface MemberRepository {
 	// 마지막 번호 가져오기
 	@Select("SELECT LAST_INSERT_ID()")
 	public int getLastInsertId();
+	
+	@Update("""
+			<script>
+				UPDATE `member`
+					<set>
+						updateDate = NOW(),
+						<if test="nickname != null">
+							nickname = #{nickname},
+						</if>
+						<if test="cellphoneNum != null">
+							cellphoneNum = #{cellphoneNum},
+						</if>
+						<if test="email != null">
+							email = #{email}
+						</if>
+					</set>
+					WHERE id = #{loginedMemberId}
+			</script>
+			""")
+	public void doModify(int loginedMemberId, String nickname, String cellphoneNum, String email);
+	
+	@Update("""
+			UPDATE `member`
+			SET updateDate = NOW(),
+			loginPw = #{loginPw}
+			WHERE id = #{loginedMemberId}
+			""")
+	public void doPasswordModify(int loginedMemberId, String loginPw);
 
 	
 

@@ -69,10 +69,10 @@ public class UsrReplyController {
 	}
 
 	// 가져오기
-	@RequestMapping("/usr/reply/getModifyForm") // 주소
+	@RequestMapping("/usr/reply/getReplyContent") // 주소
 	@ResponseBody // 실행할 몸통
-	public ResultData<Reply> getModifyForm(int id) {
-		Reply reply = replyService.getForPrintReply(id);
+	public ResultData<Reply> getReplyContent(int id) {
+		Reply reply = replyService.getReplyContent(id);
 
 		if (reply == null) {
 			return ResultData.from("F-1", "존재하지 않는 댓글입니다.");

@@ -11,6 +11,8 @@ import com.kij.exam.demo.vo.Member;
 import com.kij.exam.demo.vo.ResultData;
 import com.kij.exam.demo.vo.Rq;
 
+import ch.qos.logback.classic.pattern.Util;
+
 @Controller
 public class UsrMemberController {
 	// 인스턴스 변수
@@ -82,7 +84,7 @@ public class UsrMemberController {
 		if (member.getLoginPw().equals(loginPw) == false) {
 			return Utility.jsHistoryBack("비밀번호가 일치하지 않습니다!");
 		}
-		
+
 		rq.login(member);
 
 		return Utility.jsReplace(Utility.f("%s님 환영합니다.", member.getNickname()), "/");
@@ -101,5 +103,76 @@ public class UsrMemberController {
 		rq.logout();
 
 		return Utility.jsReplace("로그아웃 완료!", "/");
+	}
+
+	// 마이 페이지
+	@RequestMapping("/usr/member/myPage")
+	public String showMyPage() {
+		return "usr/member/myPage";
+	}
+
+	// 패스워드 확인 페이지
+	@RequestMapping("/usr/member/checkPassword")
+	public String showCheckPassword() {
+		return "usr/member/checkPassword";
+	}
+
+	// 패스워드 확인
+	@RequestMapping("/usr/member/doCheckPassword")
+	public String doCheckPassword(String loginPw) {
+		// 유효성 검사
+		if (Utility.empty(loginPw)) {
+			return rq.jsReturnOnView("비밀번호를 입력해주세요!", true);
+		}
+
+		if (rq.getLoginedMember().getLoginPw().equals(loginPw) == false) {
+			return rq.jsReturnOnView("비밀번호가 일치하지 않습니다!", true);
+		}
+
+		return "usr/member/modify";
+	}
+
+	@RequestMapping("/usr/member/doModify")
+	@ResponseBody
+	public String doModify(String nickname, String cellphoneNum, String email) {
+		// 유효성 검사
+		if (Utility.empty(nickname)) {
+			return Utility.jsHistoryBack("닉네임을 입력해주세요!");
+		}
+		if (Utility.empty(cellphoneNum)) {
+			return Utility.jsHistoryBack("전화번호를 입력해주세요!");
+		}
+		if (Utility.empty(email)) {
+			return Utility.jsHistoryBack("이메일을 입력해주세요!");
+		}
+
+		memberService.doModify(rq.getLoginedMemberId(), nickname, cellphoneNum, email);
+
+		return Utility.jsReplace("회원정보가 수정됐습니다.", "./myPage");
+	}
+
+	// 패스워드 수정 페이지
+	@RequestMapping("/usr/member/passwordModify")
+	public String passwordModify() {
+		return "usr/member/passwordModify";
+	}
+	
+	// 패스워드 수정
+	@RequestMapping("/usr/member/doPasswordModify")
+	@ResponseBody
+	public String doPasswordModify(String loginPw, String loginPwChk) {
+		if (Utility.empty(loginPw)) {
+			return Utility.jsHistoryBack("새 비밀번호를 입력해주세요!");
+		}
+		if (Utility.empty(loginPwChk)) {
+			return Utility.jsHistoryBack("새 비밀번호 확인을 입력해주세요!");
+		}
+		if (loginPw.equals(loginPwChk) == false) {
+			return Utility.jsHistoryBack("비밀번호가 일치하지 않습니다.");
+		}
+		
+		memberService.doPasswordModify(rq.getLoginedMemberId(), loginPw);
+
+		return Utility.jsReplace("비밀번호가 수정됐습니다.", "./myPage");
 	}
 }

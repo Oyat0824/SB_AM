@@ -55,6 +55,16 @@ public class MemberService {
 	private Member getMemberByNameAndEmail(String name, String email) {
 		return memberRepository.getMemberByNameAndEmail(name, email);
 	}
+	
+	// 회원정보 수정
+	public void doModify(int loginedMemberId, String nickname, String cellphoneNum, String email) {
+		memberRepository.doModify(loginedMemberId, nickname, cellphoneNum, email);
+	}
+	
+	// 비밀번호 수정
+	public void doPasswordModify(int loginedMemberId, String loginPw) {
+		memberRepository.doPasswordModify(loginedMemberId, loginPw);
+	}
 
 	
 

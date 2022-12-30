@@ -32,16 +32,16 @@
 		replyContent.html(originalForm);
 		replyContent.addClass("pl-16").removeClass("px-5");
 		
-		originalForm = null;
 		originalIndex = null;
+		originalForm = null;
 	}
 	
 	const ReplyModify__getForm = function(replyId, idx) {
-		if(originalForm != null) {
+		if(originalIndex != null && originalForm != null) {
 			ReplyModify__cancel(originalIndex);
 		}
 		
-		$.get('../reply/getModifyForm', {
+		$.get('../reply/getReplyContent', {
 			id : replyId,
 			ajaxMode : 'Y'
 		}, function(data){
