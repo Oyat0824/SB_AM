@@ -11,6 +11,8 @@ import com.kij.exam.demo.vo.Member;
 import com.kij.exam.demo.vo.ResultData;
 import com.kij.exam.demo.vo.Rq;
 
+import ch.qos.logback.classic.pattern.Util;
+
 @Controller
 public class UsrMemberController {
 	// 인스턴스 변수
@@ -136,13 +138,34 @@ public class UsrMemberController {
 	// 회원정보 수정 페이지
 	@RequestMapping("/usr/member/modify")
 	public String showModify(String memberModifyAuthKey) {
+		if (Utility.empty(memberModifyAuthKey)) {
+			return rq.jsReturnOnView("회원 수정 인증코드가 필요합니다.", true);
+		}
+
+		ResultData chkMemberModifyAuthKeyRd = memberService.chkMemberModifyAuthKey(rq.getLoginedMemberId(),
+				memberModifyAuthKey);
+
+		if (chkMemberModifyAuthKeyRd.isFail()) {
+			return rq.jsReturnOnView(chkMemberModifyAuthKeyRd.getMsg(), true);
+		}
+
 		return "usr/member/modify";
 	}
 
 	// 회원정보 수정
 	@RequestMapping("/usr/member/doModify")
 	@ResponseBody
-	public String doModify(String nickname, String cellphoneNum, String email) {
+	public String doModify(String memberModifyAuthKey, String nickname, String cellphoneNum, String email) {
+		if (Utility.empty(memberModifyAuthKey)) {
+			return Utility.jsHistoryBack("회원 수정 인증코드가 필요합니다.");
+		}
+
+		ResultData chkMemberModifyAuthKeyRd = memberService.chkMemberModifyAuthKey(rq.getLoginedMemberId(), memberModifyAuthKey);
+
+		if (chkMemberModifyAuthKeyRd.isFail()) {
+			return Utility.jsHistoryBack(chkMemberModifyAuthKeyRd.getMsg());
+		}
+
 		// 유효성 검사
 		if (Utility.empty(nickname)) {
 			return Utility.jsHistoryBack("닉네임을 입력해주세요!");
@@ -161,14 +184,35 @@ public class UsrMemberController {
 
 	// 패스워드 수정 페이지
 	@RequestMapping("/usr/member/passwordModify")
-	public String passwordModify() {
+	public String passwordModify(String memberModifyAuthKey) {
+		if (Utility.empty(memberModifyAuthKey)) {
+			return rq.jsReturnOnView("회원 수정 인증코드가 필요합니다.", true);
+		}
+
+		ResultData chkMemberModifyAuthKeyRd = memberService.chkMemberModifyAuthKey(rq.getLoginedMemberId(),
+				memberModifyAuthKey);
+
+		if (chkMemberModifyAuthKeyRd.isFail()) {
+			return rq.jsReturnOnView(chkMemberModifyAuthKeyRd.getMsg(), true);
+		}
+		
 		return "usr/member/passwordModify";
 	}
 
 	// 패스워드 수정
 	@RequestMapping("/usr/member/doPasswordModify")
 	@ResponseBody
-	public String doPasswordModify(String loginPw, String loginPwChk) {
+	public String doPasswordModify(String memberModifyAuthKey, String loginPw, String loginPwChk) {
+		if (Utility.empty(memberModifyAuthKey)) {
+			return Utility.jsHistoryBack("회원 수정 인증코드가 필요합니다.");
+		}
+
+		ResultData chkMemberModifyAuthKeyRd = memberService.chkMemberModifyAuthKey(rq.getLoginedMemberId(), memberModifyAuthKey);
+
+		if (chkMemberModifyAuthKeyRd.isFail()) {
+			return Utility.jsHistoryBack(chkMemberModifyAuthKeyRd.getMsg());
+		}
+		
 		if (Utility.empty(loginPw)) {
 			return Utility.jsHistoryBack("새 비밀번호를 입력해주세요!");
 		}

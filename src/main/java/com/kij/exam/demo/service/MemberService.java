@@ -68,11 +68,23 @@ public class MemberService {
 		memberRepository.doPasswordModify(loginedMemberId, loginPw);
 	}
 
+	// 인증키 생성
 	public String genMemberModifyAuthKey(int loginedMemberId) {
 		String memberModifyAuthKey = Utility.getTempPassword(10);
 		attrService.setValue("member", loginedMemberId, "extra", "memberModifyAuthKey", memberModifyAuthKey, Utility.getDateStrLater(60 * 5));
 		
 		return memberModifyAuthKey;
+	}
+
+	// 인증키 확인
+	public ResultData chkMemberModifyAuthKey(int loginedMemberId, String memberModifyAuthKey) {
+		String saved = attrService.getValue("member", loginedMemberId, "extra", "memberModifyAuthKey");
+		
+		if(saved.equals(memberModifyAuthKey) == false) {
+			return ResultData.from("F-1", "일치하지 않거나 만료된 인증코드입니다.");
+		}
+		
+		return ResultData.from("S-1", "정상 인증코드입니다");
 	}
 
 	

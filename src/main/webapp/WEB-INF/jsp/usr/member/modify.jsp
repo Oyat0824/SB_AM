@@ -50,6 +50,7 @@
 <section class="mt-8 text-xl">
 	<div class="container mx-auto px-3">
 		<form action="doModify" onsubmit="return MemberModify__submit(this);">
+			<input type="hidden" name="memberModifyAuthKey" value="${param.memberModifyAuthKey}" />
 			<div class="table-box-type-1">
 				<table class="table table-zebra w-full">
 					<colgroup>
@@ -91,7 +92,7 @@
 			<div class="btns flex justify-between mt-5">
 				<button class="btn btn-primary" onclick="history.back();">뒤로가기</button>
 				<div>
-					<a class="btn btn-outline btn-info" href="passwordModify" >비밀번호 변경</a>
+					<a class="btn btn-outline btn-info" href="passwordModify?memberModifyAuthKey=${param.memberModifyAuthKey }" >비밀번호 변경</a>
 					<button class="btn btn-outline btn-success">회원정보 수정</button>
 				</div>
 			</div>
