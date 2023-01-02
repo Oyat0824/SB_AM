@@ -12,11 +12,13 @@ import com.kij.exam.demo.vo.ResultData;
 public class MemberService {
 	// 인스턴스 변수
 	private MemberRepository memberRepository;
+	private AttrService attrService;
 
 	// 생성자 주입
 	@Autowired
-	public MemberService(MemberRepository memberRepository) {
+	public MemberService(MemberRepository memberRepository, AttrService attrService) {
 		this.memberRepository = memberRepository;
+		this.attrService = attrService;
 	}
 
 // 서비스 메서드
@@ -64,6 +66,13 @@ public class MemberService {
 	// 비밀번호 수정
 	public void doPasswordModify(int loginedMemberId, String loginPw) {
 		memberRepository.doPasswordModify(loginedMemberId, loginPw);
+	}
+
+	public String genMemberModifyAuthKey(int loginedMemberId) {
+		String memberModifyAuthKey = Utility.getTempPassword(10);
+		attrService.setValue("member", loginedMemberId, "extra", "memberModifyAuthKey", memberModifyAuthKey, Utility.getDateStrLater(60 * 5));
+		
+		return memberModifyAuthKey;
 	}
 
 	
