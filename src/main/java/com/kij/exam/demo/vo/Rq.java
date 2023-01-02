@@ -42,13 +42,7 @@ public class Rq {
 
 		this.loginedMemberId = loginedMemberId;
 		this.loginedMember = loginedMember;
-		
-		this.req.setAttribute("rq", this);
 	}
-	
-	// 해당 메서드는 Rq 객체의 생성을 유도함
-	// 편의를 위해 BeforeActionInterceptor 에서 호출
-	public void initOnBeforeActionInterceptor() { }
 
 	public void jsPrintHistoryBack(String msg) {
 		res.setContentType("text/html; charset=UTF-8");

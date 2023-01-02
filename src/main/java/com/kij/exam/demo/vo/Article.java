@@ -14,14 +14,14 @@ public class Article {
 	private int memberId;
 	private String title;
 	private String body;
-	private String writerName;
 	private int viewCnt;
+	
+	private boolean actorCanChangeData;
+	private String writerName;
 	private int pointSum;
 	private int pointUp;
 	private int pointDown;
 	private int replyCount;
-	
-	private boolean actorCanChangeData;
 	
 	public String getForPrintBody() {
 		return this.body.replaceAll("\n", "<br />");

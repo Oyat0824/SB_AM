@@ -49,7 +49,7 @@
 			AND A.id = RP.relId
 			GROUP BY A.id
 		) AS A
-		INNER JOIN reply AS R
+		LEFT JOIN reply AS R
 		ON R.relId = A.id
 		WHERE 1 = 1
 		<if test="boardId != 0">
