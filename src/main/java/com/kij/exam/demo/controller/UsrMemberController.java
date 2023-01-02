@@ -11,8 +11,6 @@ import com.kij.exam.demo.vo.Member;
 import com.kij.exam.demo.vo.ResultData;
 import com.kij.exam.demo.vo.Rq;
 
-import ch.qos.logback.classic.pattern.Util;
-
 @Controller
 public class UsrMemberController {
 	// 인스턴스 변수
@@ -63,6 +61,12 @@ public class UsrMemberController {
 		return ResultData.from(doJoinRd.getResultCode(), doJoinRd.getMsg(), "member", member);
 	}
 
+	// 로그인 페이지
+	@RequestMapping("/usr/member/login")
+	public String showLogin() {
+		return "usr/member/login";
+	}
+
 	// 로그인
 	@RequestMapping("/usr/member/doLogin")
 	@ResponseBody
@@ -90,12 +94,6 @@ public class UsrMemberController {
 		return Utility.jsReplace(Utility.f("%s님 환영합니다.", member.getNickname()), "/");
 	}
 
-	// 로그인 페이지
-	@RequestMapping("/usr/member/login")
-	public String showLogin() {
-		return "usr/member/login";
-	}
-
 	// 로그아웃
 	@RequestMapping("/usr/member/doLogout")
 	@ResponseBody
@@ -119,21 +117,29 @@ public class UsrMemberController {
 
 	// 패스워드 확인
 	@RequestMapping("/usr/member/doCheckPassword")
+	@ResponseBody
 	public String doCheckPassword(String loginPw) {
 		// 유효성 검사
 		if (Utility.empty(loginPw)) {
-			return rq.jsReturnOnView("비밀번호를 입력해주세요!", true);
+			return Utility.jsHistoryBack("비밀번호를 입력해주세요!");
 		}
 
 		if (rq.getLoginedMember().getLoginPw().equals(loginPw) == false) {
-			return rq.jsReturnOnView("비밀번호가 일치하지 않습니다!", true);
+			return Utility.jsHistoryBack("비밀번호가 일치하지 않습니다!");
 		}
-		
+
 		String memberModifyAuthKey = memberService.genMemberModifyAuthKey(rq.getLoginedMemberId());
 
-		return "usr/member/modify?memberModifyAuthKey=" + memberModifyAuthKey;
+		return Utility.jsReplace("", Utility.f("modify?memberModifyAuthKey=%s", memberModifyAuthKey));
 	}
 
+	// 회원정보 수정 페이지
+	@RequestMapping("/usr/member/modify")
+	public String showModify(String memberModifyAuthKey) {
+		return "usr/member/modify";
+	}
+
+	// 회원정보 수정
 	@RequestMapping("/usr/member/doModify")
 	@ResponseBody
 	public String doModify(String nickname, String cellphoneNum, String email) {
@@ -158,7 +164,7 @@ public class UsrMemberController {
 	public String passwordModify() {
 		return "usr/member/passwordModify";
 	}
-	
+
 	// 패스워드 수정
 	@RequestMapping("/usr/member/doPasswordModify")
 	@ResponseBody
@@ -172,7 +178,7 @@ public class UsrMemberController {
 		if (loginPw.equals(loginPwChk) == false) {
 			return Utility.jsHistoryBack("비밀번호가 일치하지 않습니다.");
 		}
-		
+
 		memberService.doPasswordModify(rq.getLoginedMemberId(), loginPw);
 
 		return Utility.jsReplace("비밀번호가 수정됐습니다.", "myPage");

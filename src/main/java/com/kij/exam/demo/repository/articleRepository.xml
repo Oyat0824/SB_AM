@@ -35,8 +35,8 @@
 	</select>
 
 	<select id="getArticles" resultType="Article">
-		SELECT A.*, COUNT(R.id) AS replyCount
-		FROM ( 
+		WITH articles AS
+		(
 			SELECT A.*, M.nickname AS writerName,
 			IFNULL(SUM(RP.point), 0) AS pointSum,
 			IFNULL(SUM(IF(RP.point &gt; 0, RP.point, 0)), 0) AS pointUp,
@@ -48,7 +48,9 @@
 			ON RP.relTypeCode = 'article'
 			AND A.id = RP.relId
 			GROUP BY A.id
-		) AS A
+		)
+		SELECT A.*, COUNT(R.id) AS replyCount
+		FROM articles AS A
 		LEFT JOIN reply AS R
 		ON R.relId = A.id
 		WHERE 1 = 1
