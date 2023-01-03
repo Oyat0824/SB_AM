@@ -1,5 +1,6 @@
 server:
   port: 8084
+  max-http-header-size: 400000
 spring:
   mvc:
     view:
