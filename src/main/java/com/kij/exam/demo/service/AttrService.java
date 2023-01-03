@@ -39,6 +39,17 @@ public class AttrService {
 
 		return setValue(relTypeCode, relId, typeCode, type2Code, value, expireDate);
 	}
+	
+	public int setValue(String relTypeCode, int relId, String typeCode, String type2Code, String value, String expireDate) {
+		attrRepository.setValue(relTypeCode, relId, typeCode, type2Code, value, expireDate);
+		Attr attr = get(relTypeCode, relId, typeCode, type2Code);
+
+		if (attr != null) {
+			return attr.getId();
+		}
+
+		return -1;
+	}
 
 	public String getValue(String name) {
 		String[] nameBits = name.split("__");
@@ -73,16 +84,4 @@ public class AttrService {
 	public int remove(String relTypeCode, int relId, String typeCode, String type2Code) {
 		return attrRepository.remove(relTypeCode, relId, typeCode, type2Code);
 	}
-
-	public int setValue(String relTypeCode, int relId, String typeCode, String type2Code, String value, String expireDate) {
-		attrRepository.setValue(relTypeCode, relId, typeCode, type2Code, value, expireDate);
-		Attr attr = get(relTypeCode, relId, typeCode, type2Code);
-
-		if (attr != null) {
-			return attr.getId();
-		}
-
-		return -1;
-	}
-
 }

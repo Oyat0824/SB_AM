@@ -2,10 +2,12 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <c:set var="pageTitle" value="Article Write" />
 <%@ include file="../common/head.jsp"%>
+<%@ include file="../common/toastUiEditorLib.jsp" %>
 
 <section class="mt-8 text-xl">
 	<div class="container mx-auto px-3">
-		<form action="doWrite">
+		<form action="doWrite" onsubmit="return submitForm(this);">
+			<input type="hidden" name="body" />
 			<div class="table-box-type-1">
 				<table class="table table-zebra w-full">
 					<colgroup>
@@ -30,8 +32,9 @@
 						</tr>
 						<tr>
 							<th>내용</th>
-							<td><textarea class="textarea textarea-ghost w-full text-base border-gray-400" name="body"
-									placeholder="내용을 입력해주세요."></textarea></td>
+							<td>
+								<div class="toast-ui-editor text-left"></div>
+							</td>
 						</tr>
 						<tr>
 							<td colspan="2"><button class="btn btn-outline btn-accent w-full">작성</button></td>

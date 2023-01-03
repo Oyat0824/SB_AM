@@ -11,8 +11,6 @@ import com.kij.exam.demo.vo.Member;
 import com.kij.exam.demo.vo.ResultData;
 import com.kij.exam.demo.vo.Rq;
 
-import ch.qos.logback.classic.pattern.Util;
-
 @Controller
 public class UsrMemberController {
 	// 인스턴스 변수
