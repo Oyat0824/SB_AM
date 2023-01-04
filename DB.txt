@@ -37,7 +37,7 @@ CREATE TABLE article(
 	updateDate DATETIME NOT NULL,
 	memberId INT UNSIGNED NOT NULL,
 	title VARCHAR(200) NOT NULL,
-	`body` TEXT NOT NULL
+	`body` MEDIUMTEXT NOT NULL
 );
 
 # article 테이블에 boardId 컬럼 추가
@@ -69,12 +69,36 @@ CREATE TABLE reply (
 
 ALTER TABLE `SB_AM`.`reply` ADD INDEX (`relTypeCode` , `relId`);
 
+# 부가정보테이블
+CREATE TABLE attr (
+    id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    regDate DATETIME NOT NULL,
+    updateDate DATETIME NOT NULL,
+    `relTypeCode` VARCHAR(20) NOT NULL,
+    `relId` INT UNSIGNED NOT NULL,
+    `typeCode` VARCHAR(30) NOT NULL,
+    `type2Code` VARCHAR(70) NOT NULL,
+    `value` TEXT NOT NULL
+);
+
+# attr 유니크 인덱스 걸기
+## 중복변수 생성금지
+## 변수찾는 속도 최적화
+ALTER TABLE `attr` ADD UNIQUE INDEX (`relTypeCode`, `relId`, `typeCode`, `type2Code`);
+
+## 특정 조건을 만족하는 회원 또는 게시물(기타 데이터)를 빠르게 찾기 위해서
+ALTER TABLE `attr` ADD INDEX (`relTypeCode`, `typeCode`, `type2Code`);
+
+# attr에 만료날짜 추가
+ALTER TABLE `attr` ADD COLUMN `expireDate` DATETIME NULL AFTER `value`;
+
 # 테이블 조회
 SELECT * FROM `member`;
 SELECT * FROM `board`;
 SELECT * FROM article;
 SELECT * FROM reactionPoint;
 SELECT * FROM reply;
+SELECT * FROM attr;
 
 ############ member 데이터 추가
 INSERT INTO `member`
@@ -93,7 +117,7 @@ SET regDate = NOW(),
 updateDate = NOW(),
 loginId = 'test1',
 loginPw = 'test1',
-`name` = '유저1',
+`name` = '고길동',
 `nickname` = '유저1',
 cellphoneNum = '01011112222',
 email = 'langue0824@gmail.com';
@@ -103,7 +127,7 @@ SET regDate = NOW(),
 updateDate = NOW(),
 loginId = 'test2',
 loginPw = 'test2',
-`name` = '유저2',
+`name` = '구자환',
 `nickname` = '유저2',
 cellphoneNum = '01033334444',
 email = 'langue0824@gmail.com';
@@ -297,13 +321,18 @@ ORDER BY A.id DESC;
 # WITH AS 사용 해보기
 WITH articles AS
 (
-	SELECT A.*, M.nickname AS writerName,
-	IFNULL(SUM(RP.point), 0) AS pointSum,
-	IFNULL(SUM(IF(RP.point > 0, RP.point, 0)), 0) AS pointUp,
-	IFNULL(SUM(IF(RP.point < 0, RP.point, 0)), 0) AS pointDown
+	SELECT A.*, M.nickname AS writerName
 	FROM article AS A
 	INNER JOIN `member` AS M
 	ON A.memberId = M.id
+),
+articles2 AS
+(
+	SELECT A.*,
+	IFNULL(SUM(RP.point), 0) AS pointSum,
+	IFNULL(SUM(IF(RP.point > 0, RP.point, 0)), 0) AS pointUp,
+	IFNULL(SUM(IF(RP.point < 0, RP.point, 0)), 0) AS pointDown
+	FROM articles AS A
 	LEFT JOIN reactionPoint AS RP
 	ON RP.relTypeCode = 'article'
 	AND A.id = RP.relId
@@ -311,7 +340,7 @@ WITH articles AS
 )
 
 SELECT A.*, COUNT(R.id) AS replyCount
-FROM articles AS A
+FROM articles2 AS A
 LEFT JOIN reply AS R
 ON R.relId = A.id
 GROUP BY A.id

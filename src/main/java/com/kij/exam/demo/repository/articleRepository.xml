@@ -37,20 +37,25 @@
 	<select id="getArticles" resultType="Article">
 		WITH articles AS
 		(
-			SELECT A.*, M.nickname AS writerName,
-			IFNULL(SUM(RP.point), 0) AS pointSum,
-			IFNULL(SUM(IF(RP.point &gt; 0, RP.point, 0)), 0) AS pointUp,
-			IFNULL(SUM(IF(RP.point &lt; 0, RP.point, 0)), 0) AS pointDown
+			SELECT A.*, M.nickname AS writerName
 			FROM article AS A
 			INNER JOIN `member` AS M
 			ON A.memberId = M.id
+		),
+		articles2 AS
+		(
+			SELECT A.*,
+			IFNULL(SUM(RP.point), 0) AS pointSum,
+			IFNULL(SUM(IF(RP.point &gt; 0, RP.point, 0)), 0) AS pointUp,
+			IFNULL(SUM(IF(RP.point &lt; 0, RP.point, 0)), 0) AS pointDown
+			FROM articles AS A
 			LEFT JOIN reactionPoint AS RP
 			ON RP.relTypeCode = 'article'
 			AND A.id = RP.relId
 			GROUP BY A.id
 		)
 		SELECT A.*, COUNT(R.id) AS replyCount
-		FROM articles AS A
+		FROM articles2 AS A
 		LEFT JOIN reply AS R
 		ON R.relId = A.id
 		WHERE 1 = 1

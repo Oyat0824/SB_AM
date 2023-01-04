@@ -27,13 +27,13 @@ public class MemberService {
 		// 로그인 아이디 중복체크
 		Member existsMember = getMemberByLoginId(loginId);
 		if(existsMember != null) {
-			return ResultData.from("F-7", Utility.f("이미 존재하는 아이디(%s)입니다.", loginId));
+			return ResultData.from("F-8", Utility.f("이미 존재하는 아이디(%s)입니다.", loginId));
 		}
 		
 		// 이름, 이메일 중복체크
 		existsMember = getMemberByNameAndEmail(name, email);
 		if(existsMember != null) {
-			return ResultData.from("F-8", Utility.f("이미 사용중인 이름(%s)과 이메일(%s)입니다.", name, email));
+			return ResultData.from("F-9", Utility.f("이미 사용중인 이름(%s)과 이메일(%s)입니다.", name, email));
 		}
 
 		memberRepository.doJoin(loginId, loginPw, name, nickname, cellphoneNum, email);

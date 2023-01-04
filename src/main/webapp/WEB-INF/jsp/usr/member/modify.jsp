@@ -5,7 +5,7 @@
 
 <script>
 	const MemberModify__submit = function(form) {
-		let reg_num = /^[0-9]{8,13}$/;
+		let reg_num = /^[0-9]{10,11}$/;
 		let reg_email =/^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/; 
 
 		form.nickname.value = form.nickname.value.trim();

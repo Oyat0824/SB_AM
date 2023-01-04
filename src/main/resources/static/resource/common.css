@@ -7,6 +7,12 @@ html > body .toastui-editor-contents {
 	min-width: 800px;
 }
 
+html > body .ProseMirror p,
+html > body .toastui-editor-contents p,
+html > body .toast-ui-viewer p {
+	font-size: 14px;
+}
+
 .table-box-type-1 > table th,
 .table-box-type-1 > table td {
 	border-top: 1px solid #999;
