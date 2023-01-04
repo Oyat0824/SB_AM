@@ -34,8 +34,8 @@ public class UsrMemberController {
 	// 회원가입
 	@RequestMapping("/usr/member/doJoin")
 	@ResponseBody
-	public String doJoin(String loginId, String loginPw, String loginPwChk, String name, String nickname, String cellphoneNum,
-			String email) {
+	public String doJoin(String loginId, String loginPw, String loginPwChk, String name, String nickname,
+			String cellphoneNum, String email) {
 		// 유효성 검사
 		if (Utility.empty(loginId)) {
 			return Utility.jsHistoryBack("아이디를 입력해주세요!");
@@ -58,8 +58,8 @@ public class UsrMemberController {
 		if (Utility.empty(email)) {
 			return Utility.jsHistoryBack("이메일을 입력해주세요!");
 		}
-		
-		if(loginPw.equals(loginPwChk) == false) {
+
+		if (loginPw.equals(loginPwChk) == false) {
 			return Utility.jsHistoryBack("비밀번호와 비밀번호 확인 부분이 일치하지 않습니다!");
 		}
 
@@ -70,8 +70,25 @@ public class UsrMemberController {
 		}
 
 		Member member = memberService.getMemberById((int) doJoinRd.getData1());
-		
+
 		return Utility.jsReplace(Utility.f("%s님 가입을 축하드립니다.", member.getNickname()), "/");
+	}
+
+	// 회원 가져오기
+	@RequestMapping("/usr/member/getLoginIdDup")
+	@ResponseBody
+	public ResultData<String> getLoginIdDup(String loginId) {
+		if(Utility.empty(loginId)) {
+			return ResultData.from("F-1", "아이디를 입력해주세요");
+		}
+		
+		Member member = memberService.getMemberByLoginId(loginId);
+		
+		if (member != null) {
+			return ResultData.from("F-2", "이미 존재하는 아이디입니다.", "loginId", loginId);
+		}
+		
+		return ResultData.from("S-1", "사용 가능한 아이디입니다.", "loginId", loginId);
 	}
 
 	// 로그인 페이지

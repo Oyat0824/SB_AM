@@ -4,6 +4,8 @@
 <%@ include file="../common/head.jsp"%>
 
 <script>
+	let validLoginId = null;
+
 	const MemberJoin__submit = function(form) {
 		let reg_num = /^[0-9]{10,11}$/;
 		let reg_email =/^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/;
@@ -11,7 +13,13 @@
 		form.loginId.value = form.loginId.value.trim();
 		if(form.loginId.value.length == 0) {
 			alert("아이디를 입력해주세요.");
-			form.loginId.focus();s
+			form.loginId.focus();
+			
+			return false;
+		}
+		if(form.loginId.value == validLoginId) {
+			alert("이미 사용중인 아이디입니다.");
+			form.loginId.focus();
 			
 			return false;
 		}
@@ -83,6 +91,47 @@
 			return false;
 		}
 	}
+	
+	const errorMsg = function(e) {
+		const el = $(e);
+		const form = el.closest("form")[0];
+		
+		if(el.val().length == 0) {
+			el.next(".errorMsg").html("필수 정보입니다.");
+			return false;
+		}
+		
+		if(el[0].name == "loginId") {
+			$.get('getLoginIdDup', {
+				loginId : el.val(),
+				ajaxMode : 'Y'
+			}, function(data){
+				if(data.fail) {
+					validLoginId = data.data1;
+					el.next(".errorMsg").addClass("text-red-500").removeClass("text-green-400").html(`\${data.data1}은(는) \${data.msg}`);
+				} else {
+					validLoginId = null;
+					el.next(".errorMsg").addClass("text-green-400").removeClass("text-red-500").html("멋진 아이디네요!");
+				}
+			}, 'json');
+			
+			return false;
+		}
+		
+		if(el[0].name == "loginPwChk") {
+			if(form.loginPw.value != el.val()) {
+				el.next(".errorMsg").html("비밀번호가 일치하지 않습니다.");
+			}
+		}
+	}
+
+	$(function(){
+		$(".input").on("propertychange change paste input", function() {
+			if(!$(this).next(".errorMsg").html() == "") {
+				$(this).next(".errorMsg").empty();
+			}
+		})
+	})
 </script>
 
 <section class="mt-8 text-xl">
@@ -97,35 +146,56 @@
 					<tbody>
 						<tr>
 							<th>아이디</th>
-							<td><input class="input input-ghost w-full text-lg border-gray-400" type="text" name="loginId" placeholder="아이디를 입력해주세요." /></td>
+							<td>
+								<input onblur="return errorMsg(this);" class="input input-ghost w-full text-lg border-gray-400" type="text" name="loginId" placeholder="아이디를 입력해주세요." />
+								<div class="errorMsg mt-4 font-bold text-red-500 text-base"></div>
+							</td>
 						</tr>
 						<tr>
 							<th>비밀번호</th>
-							<td><input class="input input-ghost w-full text-lg border-gray-400" type="password" name="loginPw" placeholder="비밀번호를 입력해주세요." /></td>
+							<td>
+								<input onblur="return errorMsg(this);" class="input input-ghost w-full text-lg border-gray-400" type="password" name="loginPw" placeholder="비밀번호를 입력해주세요." />
+								<div class="errorMsg mt-4 font-bold text-red-500 text-base"></div>
+							</td>
 						</tr>
 						<tr>
 							<th>비밀번호 확인</th>
-							<td><input class="bg-white input input-ghost w-full text-lg border-gray-400" type="password" name="loginPwChk"
-								placeholder="비밀번호 확인을 위해 입력해주세요." value="" /></td>
+							<td>
+								<input onblur="return errorMsg(this);" class="bg-white input input-ghost w-full text-lg border-gray-400" type="password" name="loginPwChk"
+								placeholder="비밀번호 확인을 위해 입력해주세요." value="" />
+								<div class="errorMsg mt-4 font-bold text-red-500 text-base"></div>
+							</td>
 						</tr>
 						<tr>
 							<th>이름</th>
-							<td><input class="input input-ghost w-full text-lg border-gray-400" type="text" name="name" placeholder="이름을 입력해주세요." /></td>
+							<td>
+								<input onblur="return errorMsg(this);" class="input input-ghost w-full text-lg border-gray-400" type="text" name="name" placeholder="이름을 입력해주세요." />
+								<div class="errorMsg mt-4 font-bold text-red-500 text-base"></div>
+							</td>
 						</tr>
 						<tr>
 							<th>닉네임</th>
-							<td><input class="bg-white input input-ghost w-full text-lg border-gray-400" type="text" name="nickname"
-								placeholder="닉네임을 입력해주세요." /></td>
+							<td>
+								<input onblur="return errorMsg(this);" class="bg-white input input-ghost w-full text-lg border-gray-400" type="text" name="nickname"
+								placeholder="닉네임을 입력해주세요." />
+								<div class="errorMsg mt-4 font-bold text-red-500 text-base"></div>
+							</td>
 						</tr>
 						<tr>
 							<th>전화번호</th>
-							<td><input class="bg-white input input-ghost w-full text-lg border-gray-400" type="tel" name=cellphoneNum
-								placeholder="전화번호를 입력해주세요." /></td>
+							<td>
+								<input onblur="return errorMsg(this);" class="bg-white input input-ghost w-full text-lg border-gray-400" type="tel" name=cellphoneNum
+								placeholder="전화번호를 입력해주세요." />
+								<div class="errorMsg mt-4 font-bold text-red-500 text-base"></div>
+							</td>
 						</tr>
 						<tr>
 							<th>이메일</th>
-							<td><input class="bg-white input input-ghost w-full text-lg border-gray-400" type="email" name="email"
-								placeholder="이메일을 입력해주세요." /></td>
+							<td>
+								<input onblur="return errorMsg(this);" class="bg-white input input-ghost w-full text-lg border-gray-400" type="email" name="email"
+								placeholder="이메일을 입력해주세요." />
+								<div class="errorMsg mt-4 font-bold text-red-500 text-base"></div>
+							</td>
 						</tr>
 						<tr>
 							<td colspan="2"><button class="btn btn-outline btn-accent w-full">회원가입</button></td>
