@@ -38,6 +38,8 @@
 					<li class="hover:text-purple-400"><a class="h-full px-3 flex items-center" href="/usr/member/myPage"><span>${rq.loginedMember.nickname}</span></a></li>
 					<li class="hover:text-purple-400"><a class="h-full px-3 flex items-center" href="/usr/member/doLogout"><span>LOGOUT</span></a></li>
 				</c:if>
+				<li class="hover:text-purple-400"><a class="h-full px-3 flex items-center" href="/usr/home/APITest"><span>API</span></a></li>
+				<li class="hover:text-purple-400"><a class="h-full px-3 flex items-center" href="/usr/home/APITest2"><span>API 2</span></a></li>
 			</ul>
 		</div>
 	</header>
