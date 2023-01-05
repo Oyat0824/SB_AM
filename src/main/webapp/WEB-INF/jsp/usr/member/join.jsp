@@ -108,7 +108,8 @@
 			}, function(data){
 				if(data.fail) {
 					validLoginId = data.data1;
-					el.next(".errorMsg").addClass("text-red-500").removeClass("text-green-400").html(`\${data.data1}은(는) \${data.msg}`);
+					el.next(".errorMsg").addClass("text-red-500")
+					.removeClass("text-green-400").html(`\${data.data1}은(는) \${data.msg}`);
 				} else {
 					validLoginId = null;
 					el.next(".errorMsg").addClass("text-green-400").removeClass("text-red-500").html("멋진 아이디네요!");
@@ -148,14 +149,14 @@
 							<th>아이디</th>
 							<td>
 								<input onblur="return errorMsg(this);" class="input input-ghost w-full text-lg border-gray-400" type="text" name="loginId" placeholder="아이디를 입력해주세요." />
-								<div class="errorMsg mt-4 font-bold text-red-500 text-base"></div>
+								<div class="errorMsg mt-2 font-bold text-red-500 text-sm"></div>
 							</td>
 						</tr>
 						<tr>
 							<th>비밀번호</th>
 							<td>
 								<input onblur="return errorMsg(this);" class="input input-ghost w-full text-lg border-gray-400" type="password" name="loginPw" placeholder="비밀번호를 입력해주세요." />
-								<div class="errorMsg mt-4 font-bold text-red-500 text-base"></div>
+								<div class="errorMsg mt-2 font-bold text-red-500 text-sm"></div>
 							</td>
 						</tr>
 						<tr>
@@ -163,14 +164,14 @@
 							<td>
 								<input onblur="return errorMsg(this);" class="bg-white input input-ghost w-full text-lg border-gray-400" type="password" name="loginPwChk"
 								placeholder="비밀번호 확인을 위해 입력해주세요." value="" />
-								<div class="errorMsg mt-4 font-bold text-red-500 text-base"></div>
+								<div class="errorMsg mt-2 font-bold text-red-500 text-sm"></div>
 							</td>
 						</tr>
 						<tr>
 							<th>이름</th>
 							<td>
 								<input onblur="return errorMsg(this);" class="input input-ghost w-full text-lg border-gray-400" type="text" name="name" placeholder="이름을 입력해주세요." />
-								<div class="errorMsg mt-4 font-bold text-red-500 text-base"></div>
+								<div class="errorMsg mt-2 font-bold text-red-500 text-sm"></div>
 							</td>
 						</tr>
 						<tr>
@@ -178,7 +179,7 @@
 							<td>
 								<input onblur="return errorMsg(this);" class="bg-white input input-ghost w-full text-lg border-gray-400" type="text" name="nickname"
 								placeholder="닉네임을 입력해주세요." />
-								<div class="errorMsg mt-4 font-bold text-red-500 text-base"></div>
+								<div class="errorMsg mt-2 font-bold text-red-500 text-sm"></div>
 							</td>
 						</tr>
 						<tr>
@@ -186,7 +187,7 @@
 							<td>
 								<input onblur="return errorMsg(this);" class="bg-white input input-ghost w-full text-lg border-gray-400" type="tel" name=cellphoneNum
 								placeholder="전화번호를 입력해주세요." />
-								<div class="errorMsg mt-4 font-bold text-red-500 text-base"></div>
+								<div class="errorMsg mt-2 font-bold text-red-500 text-sm"></div>
 							</td>
 						</tr>
 						<tr>
@@ -194,7 +195,7 @@
 							<td>
 								<input onblur="return errorMsg(this);" class="bg-white input input-ghost w-full text-lg border-gray-400" type="email" name="email"
 								placeholder="이메일을 입력해주세요." />
-								<div class="errorMsg mt-4 font-bold text-red-500 text-base"></div>
+								<div class="errorMsg mt-2 font-bold text-red-500 text-sm"></div>
 							</td>
 						</tr>
 						<tr>

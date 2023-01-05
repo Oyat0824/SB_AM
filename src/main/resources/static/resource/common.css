@@ -28,3 +28,52 @@ html > body .toast-ui-viewer p {
 	opacity: 1;
 	visibility: visible;
 }
+
+.modal-exam {
+	font-size: 3rem;
+}
+
+.layer-bg {
+	display: none;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, .4);
+	position: absolute;
+	top: 0;
+	left: 0;
+	cursor: pointer;
+}
+
+.layer {
+	display: none;
+	width: 500px;
+	height: 500px;
+	background-color: #000;
+	color: #fff;
+	border: 10px solid green;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.layer > h2 {
+	padding: 20px;
+}
+
+.layer > .close-btn {
+	position: absolute;
+	bottom: 20px;
+	right: 20px;
+	border: 5px solid #fff;
+	border-radius: 10px;
+	padding: 10px;
+}
+
+.close {
+	position: absolute;
+	top: 8px;
+	right: 16px;
+	font-size: 2rem;
+	cursor: pointer;
+}
