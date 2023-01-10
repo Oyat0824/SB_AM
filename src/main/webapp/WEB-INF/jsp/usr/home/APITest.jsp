@@ -3,6 +3,8 @@
 <c:set var="pageTitle" value="APITest" />
 <%@ include file="../common/head.jsp"%>
 
+<script type="text/javascript" src="/resource/xml2json.js"></script>
+
 <script>
 	const API_KEY = "sAq%2FjoEjRgCx1pEx0jXkpT3nyI60HFLSVjZPlikqVWtA11ILxUlYCcur2%2F%2F2Ff%2Ff4zZZqWPsUYSBkIdb7U%2Bccg%3D%3D";
 	
@@ -18,6 +20,29 @@
 	}
 	
 	getData();
+	
+	var xml = '<?xml version="1.0" encoding="UTF-8"?>'
+        + '<catalog>'
+        + '<book id="bk101">'
+        + '<author>Gambardella, Matthew</author>'
+        + '<title>XML Developer\'s Guide</title>'
+        + '<genre>Computer</genre>'
+        + '<price>44.95</price>'
+        + '<publish_date>2000-10-01</publish_date>'
+        + '<description>An in-depth look at creating applications with XML.</description>'
+        + '</book>'
+        + '</catalog>';
+        
+	var xml2json = new XMLtoJSON();
+	var objson = xml2json.fromStr(xml);	// object 형식			
+	var strjson = xml2json.fromStr(xml, 'string');	// string 형식
+
+	console.log(objson)
+	console.log(strjson)
+	       
+	var aJson = objson;
+	
+	document.write(aJson.catalog.book.title['#text']);
 	
 </script>
 

@@ -132,6 +132,10 @@ loginPw = 'test2',
 cellphoneNum = '01033334444',
 email = 'langue0824@gmail.com';
 
+# 멤버 테이블에 있는 비밀번호를 SHA2 256으로 변환
+update `member`
+set loginPw = sha2(loginPw, 256);
+
 ############ board 데이터 추가
 INSERT INTO `board`
 SET regDate = NOW(),
@@ -196,9 +200,9 @@ relId = 2,
 `point` = -1;
 
 ############ reply 데이터 삽입
-INSERT INTO reply
-SET regDate = NOW(),
-updateDate = NOW(),
+insert into reply
+set regDate = now(),
+updateDate = now(),
 memberId = 1,
 relTypeCode = 'article',
 relId = 2,
@@ -224,32 +228,32 @@ relId = 3,
 
 SELECT LAST_INSERT_ID();
 
-SELECT A.*, B.id, B.name AS boardId
-FROM article AS A
-INNER JOIN board AS B
-ON A.boardId = B.id;
+select A.*, B.id, B.name as boardId
+from article as A
+inner join board as B
+on A.boardId = B.id;
 
 # 게시물 갯수 늘리기
-INSERT INTO article
+insert into article
 (
 regDate, updateDate, memberId, boardId, title, `body`
 )
-SELECT NOW(), NOW(), ROUND(RAND() * 2) + 1, ROUND(RAND() * 1) + 1, CONCAT('제목_', ROUND(RAND() * 1000)), CONCAT('내용_', ROUND(RAND() * 1000))
-FROM article;
+Select now(), NOW(), ROUND(RAND() * 2) + 1, ROUND(RAND() * 1) + 1, concat('제목_', ROUND(RAND() * 1000)), CONCAT('내용_', ROUND(RAND() * 1000))
+from article;
 
 -- select count(*)
 -- from article;
 
-SELECT A.*,
-IFNULL(SUM(RP.point), 0) AS pointSum,
+select A.*,
+ifnull(SUM(RP.point), 0) as pointSum,
 IFNULL(SUM(IF(RP.point > 0, RP.point, 0)), 0) AS pointUp,
 IFNULL(SUM(IF(RP.point < 0, RP.point, 0)), 0) AS pointDown
-FROM ( 
+from ( 
 	SELECT A.*, M.nickname AS writerName
 	FROM article AS A
 	INNER JOIN `member` AS M
 	ON A.memberId = M.id
-) AS A
+) As A
 LEFT JOIN reactionPoint AS RP
 ON RP.relTypeCode = 'article'
 AND A.id = RP.relId
@@ -263,21 +267,21 @@ IFNULL(SUM(IF(RP.point < 0, RP.point, 0)), 0) AS pointDown
 FROM article AS A
 INNER JOIN `member` AS M
 ON A.memberId = M.id
-LEFT JOIN reactionPoint AS RP
+LEFT JOIN reactionPoint As RP
 ON RP.relTypeCode = 'article'
 AND A.id = RP.relId
 WHERE A.id = 2
 GROUP BY A.id;
 
-SELECT *,
+select *,
 IFNULL(SUM(`point`), 0) AS pointSum,
 IFNULL(SUM(IF(`point` > 0, `point`, 0)), 0) AS pointUp,
 IFNULL(SUM(IF(`point` < 0, `point`, 0)), 0) AS pointDown
-FROM reactionPoint
-WHERE relTypeCode = 'article'
-AND relId = 2;
+from reactionPoint
+where relTypeCode = 'article'
+And relId = 2;
 
-DELETE FROM reactionPoint
+delete from reactionPoint
 WHERE relTypeCode = 'article'
 AND memberId = 1
 AND relId = 2;
@@ -291,7 +295,7 @@ WHERE relTypeCode = 'article'
 AND relId = 2;
 
 
-SELECT R.*, M.nickname AS writerName
+SELECT R.*, M.nickname As writerName
 FROM reply AS R
 INNER JOIN `member` AS M
 ON R.memberId = M.id
@@ -299,7 +303,7 @@ WHERE R.relTypeCode = 'article'
 AND R.relId = 3
 ORDER BY R.id DESC;
 
-SELECT A.*, COUNT(R.id) AS replyCount
+SELECT A.*, count(R.id) AS replyCount
 FROM ( 
 	SELECT A.*, M.nickname AS writerName,
 	IFNULL(SUM(RP.point), 0) AS pointSum,
@@ -319,7 +323,7 @@ GROUP BY A.id
 ORDER BY A.id DESC;
 
 # WITH AS 사용 해보기
-WITH articles AS
+with articles as
 (
 	SELECT A.*, M.nickname AS writerName
 	FROM article AS A
@@ -328,7 +332,7 @@ WITH articles AS
 ),
 articles2 AS
 (
-	SELECT A.*,
+	select A.*,
 	IFNULL(SUM(RP.point), 0) AS pointSum,
 	IFNULL(SUM(IF(RP.point > 0, RP.point, 0)), 0) AS pointUp,
 	IFNULL(SUM(IF(RP.point < 0, RP.point, 0)), 0) AS pointDown
@@ -339,8 +343,8 @@ articles2 AS
 	GROUP BY A.id
 )
 
-SELECT A.*, COUNT(R.id) AS replyCount
-FROM articles2 AS A
+select A.*, COUNT(R.id) AS replyCount
+from articles2 AS A
 LEFT JOIN reply AS R
 ON R.relId = A.id
 GROUP BY A.id

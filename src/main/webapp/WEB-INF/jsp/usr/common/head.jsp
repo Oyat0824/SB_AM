@@ -22,28 +22,40 @@
 </head>
 <body>
 	<header>
-		<div class="h-20 flex container mx-auto text-4xl">
-			<a class="h-full px-3 flex items-center" href="/"><span>로고</span></a>
-			<!-- 필요한지 모르겠음 -->
-			<div class="flex-grow"></div>
-			<ul class="flex">
-				<li class="hover:text-purple-400"><a class="h-full px-3 flex items-center" href="/"><span>HOME</span></a></li>
-				<li class="hover:text-purple-400"><a class="h-full px-3 flex items-center" href="/usr/article/list?boardId=1&page=1"><span>NOTICE</span></a></li>
-				<li class="hover:text-purple-400"><a class="h-full px-3 flex items-center" href="/usr/article/list?boardId=2&page=1"><span>FREE</span></a></li>
+		<div class="container mx-auto mt-2 navbar bg-base-300 rounded-box text-xl relative z-50">
+			<div class="navbar-start">
+				<a class="btn btn-ghost normal-case text-xl" href="/">Logo</a>
+			</div>
+			<div class="navbar-center hidden lg:flex">
+				<ul class="menu menu-horizontal px-1">
+					<li><a href="/usr/article/list?boardId=1&page=1"><span>NOTICE</span></a></li>
+					<li><a href="/usr/article/list?boardId=2&page=1"><span>FREE</span></a></li>
+					<li tabindex="0">
+						<a href="/usr/home/APITest">
+							API
+							<svg class="fill-current" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z"/></svg>
+						</a>
+						<ul class="p-2">
+							<li><a href="/usr/home/APITest2">API 2</a></li>
+							<li><a href="/usr/home/APITest3">API 3</a></li>
+						</ul>
+					</li>
+					<li><a>Item 3</a></li>
+				</ul>
+			</div>
+			<div class="navbar-end">
 				<c:if test="${rq.getLoginedMemberId() == 0}">
-				<li class="hover:text-purple-400"><a class="h-full px-3 flex items-center" href="/usr/member/join"><span>JOIN</span></a></li>
-					<li class="hover:text-purple-400"><a class="h-full px-3 flex items-center" href="/usr/member/login"><span>LOGIN</span></a></li>
+					<a class="btn btn-outline mr-2" href="/usr/member/join">JOIN</a>
+					<a class="btn" href="/usr/member/login">LOGIN</a>
 				</c:if>
 				<c:if test="${rq.getLoginedMemberId() != 0}">
-					<li class="hover:text-purple-400"><a class="h-full px-3 flex items-center" href="/usr/member/myPage"><span>${rq.loginedMember.nickname}</span></a></li>
-					<li class="hover:text-purple-400"><a class="h-full px-3 flex items-center" href="/usr/member/doLogout"><span>LOGOUT</span></a></li>
+					<a class="btn btn-outline mr-2 " href="/usr/member/myPage">${rq.loginedMember.nickname}</a>
+					<a class="btn" href="/usr/member/doLogout">LOGOUT</a>
 				</c:if>
-				<li class="hover:text-purple-400"><a class="h-full px-3 flex items-center" href="/usr/home/APITest"><span>API</span></a></li>
-				<li class="hover:text-purple-400"><a class="h-full px-3 flex items-center" href="/usr/home/APITest2"><span>API 2</span></a></li>
-			</ul>
+			</div>
 		</div>
 	</header>
-	
+
 
 	<section class="my-3 text-2xl">
 		<div class="container mx-auto px-3">
