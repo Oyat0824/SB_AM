@@ -20,4 +20,5 @@ public class Member {
 	private String email;
 	private boolean detStatus;
 	private String delDate;
+	private String salt;
 }

@@ -28,8 +28,8 @@
 			</div>
 			<div class="navbar-center hidden lg:flex">
 				<ul class="menu menu-horizontal px-1">
-					<li><a href="/usr/article/list?boardId=1&page=1"><span>NOTICE</span></a></li>
-					<li><a href="/usr/article/list?boardId=2&page=1"><span>FREE</span></a></li>
+					<li><a href="/usr/article/list?boardId=1&page=1">NOTICE</a></li>
+					<li><a href="/usr/article/list?boardId=2&page=1">FREE</a></li>
 					<li tabindex="0">
 						<a href="/usr/home/APITest">
 							API

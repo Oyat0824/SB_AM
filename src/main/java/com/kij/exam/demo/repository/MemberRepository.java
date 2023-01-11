@@ -19,9 +19,10 @@ public interface MemberRepository {
 			`name` = #{name},
 			`nickname` = #{nickname},
 			cellphoneNum = #{cellphoneNum},
-			email = #{email}
+			email = #{email},
+			salt = #{salt}
 			""")
-	public void doJoin(String loginId, String loginPw, String name, String nickname, String cellphoneNum, String email);
+	public void doJoin(String loginId, String loginPw, String name, String nickname, String cellphoneNum, String email, String salt);
 	
 	// 아이디를 통해 멤버 가져오기
 	@Select("""
@@ -75,12 +76,10 @@ public interface MemberRepository {
 	@Update("""
 			UPDATE `member`
 			SET updateDate = NOW(),
-			loginPw = #{loginPw}
+			loginPw = #{loginPw},
+			salt = #{salt}
 			WHERE id = #{loginedMemberId}
 			""")
-	public void doPasswordModify(int loginedMemberId, String loginPw);
-
-	
-
+	public void doPasswordModify(int loginedMemberId, String loginPw, String salt);
 
 }

@@ -24,6 +24,12 @@
 						<tr>
 							<td colspan="2"><button class="btn btn-outline btn-accent w-full">로그인</button></td>
 						</tr>
+						<tr>
+							<td colspan="2">
+								<a class="btn btn btn-info w-6/12" href="findLoginId">아이디 찾기</a>
+								<a class="btn btn-success w-6/12" href="findLoginPw">비밀번호 찾기</a>
+							</td>
+						</tr>
 					</tbody>
 				</table>
 			</div>
