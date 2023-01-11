@@ -1,77 +1,351 @@
-##### DB 삭제/생성/선택
-DROP DATABASE IF EXISTS KKS_PROJECT;
-CREATE DATABASE KKS_PROJECT;
-USE KKS_PROJECT;
+# DB 삭제/생성/선택
+DROP DATABASE IF EXISTS SB_AM;
+CREATE DATABASE SB_AM;
+USE SB_AM;
 
-##### member 테이블 생성
+# member 테이블 생성
 CREATE TABLE `member`(
 	id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	regDate DATETIME NOT NULL,
 	updateDate DATETIME NOT NULL,
 	loginId VARCHAR(20) NOT NULL UNIQUE,
-	loginPw VARCHAR(200) NOT NULL,
+	loginPw VARCHAR(100) NOT NULL,
+	`authLevel` TINYINT UNSIGNED NOT NULL DEFAULT 3 COMMENT '권한 레벨 (3 = 일반, 7 = 관리자)',
 	`name` VARCHAR(20) NOT NULL,
-	gender TINYINT NOT NULL COMMENT '성별 (1 = 남자, 2 = 여자)',
-	birthday DATE NOT NULL,
-	email VARCHAR(50) NOT NULL,
+	nickname VARCHAR(20) NOT NULL,
 	cellphoneNum VARCHAR(20) NOT NULL,
-	memberType TINYINT NOT NULL DEFAULT 3 COMMENT '회원 타입 (3 = 일반, 6 = 판매자, 9 = 관리자)',
-	salt VARCHAR(100) NOT NULL,
+	email VARCHAR(50) NOT NULL,
 	delStatus TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '탈퇴여부 (0 = 탈퇴 전, 1 = 탈퇴 후)',
 	delDate DATETIME COMMENT '탈퇴 날짜'
 );
 
-##### store 테이블 생성
-CREATE TABLE store(
+# board 테이블 생성
+CREATE TABLE board(
 	id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	regDate DATETIME NOT NULL,
 	updateDate DATETIME NOT NULL,
-	storeName VARCHAR(40) NOT NULL,
-	storeLogo VARCHAR(40) NOT NULL,
-	storeImg VARCHAR(40) NOT NULL,
-	storeDesc VARCHAR(100) NOT NULL,
-	memberId INT UNSIGNED NOT NULL
+	`code` VARCHAR(20) NOT NULL UNIQUE COMMENT 'notice(공지사항), free1(자유게시판1), QnA(질문게시판), ...',
+	`name` VARCHAR(20) NOT NULL UNIQUE COMMENT '게시판 이름',
+	delStatus TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '삭제여부 (0 = 삭제 전, 1 = 삭제 후)',
+	delDate DATETIME COMMENT '삭제 날짜'
 );
 
-##### 테이블 조회
-SELECT * FROM `member`;
-SELECT * FROM store;
+# article 테이블 생성
+CREATE TABLE article(
+	id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	regDate DATETIME NOT NULL,
+	updateDate DATETIME NOT NULL,
+	memberId INT UNSIGNED NOT NULL,
+	title VARCHAR(200) NOT NULL,
+	`body` MEDIUMTEXT NOT NULL
+);
 
-### member 테스트 데이터 생성
+# article 테이블에 boardId 컬럼 추가
+ALTER TABLE article ADD COLUMN boardId INT UNSIGNED NOT NULL AFTER `memberId`;
+# article 테이블에 viewCnt 컬럼 추가
+ALTER TABLE article ADD COLUMN viewCnt INT UNSIGNED NOT NULL DEFAULT 0;
+
+# reactionPoint 테이블 생성
+CREATE TABLE reactionPoint (
+	id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	regDate DATETIME NOT NULL,
+	updateDate DATETIME NOT NULL,
+	memberId INT UNSIGNED NOT NULL,
+	relTypeCode VARCHAR(20) NOT NULL COMMENT '관련 데이터 타입 코드',
+	relId INT UNSIGNED NOT NULL COMMENT '관련 데이터 번호',
+	`point` SMALLINT NOT NULL
+);
+
+# reply 테이블 생성
+CREATE TABLE reply (
+	id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	regDate DATETIME NOT NULL,
+	updateDate DATETIME NOT NULL,
+	memberId INT UNSIGNED NOT NULL,
+	relTypeCode VARCHAR(20) NOT NULL COMMENT '관련 데이터 타입 코드',
+	relId INT UNSIGNED NOT NULL COMMENT '관련 데이터 번호',
+	`body` TEXT NOT NULL
+);
+
+ALTER TABLE `SB_AM`.`reply` ADD INDEX (`relTypeCode` , `relId`);
+
+# 부가정보테이블
+CREATE TABLE attr (
+    id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    regDate DATETIME NOT NULL,
+    updateDate DATETIME NOT NULL,
+    `relTypeCode` VARCHAR(20) NOT NULL,
+    `relId` INT UNSIGNED NOT NULL,
+    `typeCode` VARCHAR(30) NOT NULL,
+    `type2Code` VARCHAR(70) NOT NULL,
+    `value` TEXT NOT NULL
+);
+
+# attr 유니크 인덱스 걸기
+## 중복변수 생성금지
+## 변수찾는 속도 최적화
+ALTER TABLE `attr` ADD UNIQUE INDEX (`relTypeCode`, `relId`, `typeCode`, `type2Code`);
+
+## 특정 조건을 만족하는 회원 또는 게시물(기타 데이터)를 빠르게 찾기 위해서
+ALTER TABLE `attr` ADD INDEX (`relTypeCode`, `typeCode`, `type2Code`);
+
+# attr에 만료날짜 추가
+ALTER TABLE `attr` ADD COLUMN `expireDate` DATETIME NULL AFTER `value`;
+
+# 테이블 조회
+SELECT * FROM `member`;
+SELECT * FROM `board`;
+SELECT * FROM article;
+SELECT * FROM reactionPoint;
+SELECT * FROM reply;
+SELECT * FROM attr;
+
+############ member 데이터 추가
+INSERT INTO `member`
+SET regDate = NOW(),
+updateDate = NOW(),
+loginId = 'admin',
+loginPw = 'admin',
+`authLevel` = 7,
+`name` = '관리자',
+`nickname` = '관리자',
+cellphoneNum = '01012345678',
+email = 'langue0824@gmail.com';
+
 INSERT INTO `member`
 SET regDate = NOW(),
 updateDate = NOW(),
 loginId = 'test1',
 loginPw = 'test1',
-`name` = '유저 1',
-gender = 1,
-birthday = NOW(),
-email = 'test@naver.com',
-cellphoneNum = '01012345678',
-salt = 'test1';
+`name` = '고길동',
+`nickname` = '유저1',
+cellphoneNum = '01011112222',
+email = 'langue0824@gmail.com';
 
 INSERT INTO `member`
 SET regDate = NOW(),
 updateDate = NOW(),
 loginId = 'test2',
 loginPw = 'test2',
-`name` = '판매자',
-gender = 1,
-birthday = NOW(),
-email = 'test@naver.com',
-cellphoneNum = '01012345678',
-memberType = 6,
-salt = 'test2';
+`name` = '구자환',
+`nickname` = '유저2',
+cellphoneNum = '01033334444',
+email = 'langue0824@gmail.com';
 
-INSERT INTO `member`
+# 멤버 테이블에 있는 비밀번호를 SHA2 256으로 변환
+update `member`
+set loginPw = sha2(loginPw, 256);
+
+############ board 데이터 추가
+INSERT INTO `board`
 SET regDate = NOW(),
 updateDate = NOW(),
-loginId = 'admin',
-loginPw = 'admin',
-`name` = '관리자',
-gender = 1,
-birthday = NOW(),
-email = 'test@naver.com',
-cellphoneNum = '01012345678',
-memberType = 9,
-salt = 'admin';
+`code` = 'notice',
+`name` = '공지사항';
+
+INSERT INTO `board`
+SET regDate = NOW(),
+updateDate = NOW(),
+`code` = 'free',
+`name` = '자유';
+
+############ article 데이터 추가
+INSERT INTO article
+SET regDate = NOW(),
+updateDate = NOW(),
+memberId = 1,
+boardId = 1,
+title = '제목1',
+`body` = '내용1';
+
+INSERT INTO article
+SET regDate = NOW(),
+updateDate = NOW(),
+memberId = 2,
+boardId = 2,
+title = '제목2',
+`body` = '내용2';
+
+INSERT INTO article
+SET regDate = NOW(),
+updateDate = NOW(),
+memberId = 3,
+boardId = 2,
+title = '제목3',
+`body` = '내용3';
+
+# reactionPoint 데이터 삽입
+INSERT INTO reactionPoint
+SET regDate = NOW(),
+updateDate = NOW(),
+memberId = 1,
+relTypeCode = 'article',
+relId = 2,
+`point` = 1;
+
+INSERT INTO reactionPoint
+SET regDate = NOW(),
+updateDate = NOW(),
+memberId = 2,
+relTypeCode = 'article',
+relId = 2,
+`point` = 1;
+
+INSERT INTO reactionPoint
+SET regDate = NOW(),
+updateDate = NOW(),
+memberId = 3,
+relTypeCode = 'article',
+relId = 2,
+`point` = -1;
+
+############ reply 데이터 삽입
+insert into reply
+set regDate = now(),
+updateDate = now(),
+memberId = 1,
+relTypeCode = 'article',
+relId = 2,
+`body` = '댓글 1';
+
+INSERT INTO reply
+SET regDate = NOW(),
+updateDate = NOW(),
+memberId = 2,
+relTypeCode = 'article',
+relId = 3,
+`body` = '댓글 2';
+
+INSERT INTO reply
+SET regDate = NOW(),
+updateDate = NOW(),
+memberId = 3,
+relTypeCode = 'article',
+relId = 3,
+`body` = '댓글 3';
+
+############################################################
+
+SELECT LAST_INSERT_ID();
+
+select A.*, B.id, B.name as boardId
+from article as A
+inner join board as B
+on A.boardId = B.id;
+
+# 게시물 갯수 늘리기
+insert into article
+(
+regDate, updateDate, memberId, boardId, title, `body`
+)
+Select now(), NOW(), ROUND(RAND() * 2) + 1, ROUND(RAND() * 1) + 1, concat('제목_', ROUND(RAND() * 1000)), CONCAT('내용_', ROUND(RAND() * 1000))
+from article;
+
+-- select count(*)
+-- from article;
+
+select A.*,
+ifnull(SUM(RP.point), 0) as pointSum,
+IFNULL(SUM(IF(RP.point > 0, RP.point, 0)), 0) AS pointUp,
+IFNULL(SUM(IF(RP.point < 0, RP.point, 0)), 0) AS pointDown
+from ( 
+	SELECT A.*, M.nickname AS writerName
+	FROM article AS A
+	INNER JOIN `member` AS M
+	ON A.memberId = M.id
+) As A
+LEFT JOIN reactionPoint AS RP
+ON RP.relTypeCode = 'article'
+AND A.id = RP.relId
+GROUP BY A.id
+ORDER BY A.id DESC;
+
+SELECT A.*, M.nickname AS writerName,
+IFNULL(SUM(RP.point), 0) AS pointSum,
+IFNULL(SUM(IF(RP.point > 0, RP.point, 0)), 0) AS pointUp,
+IFNULL(SUM(IF(RP.point < 0, RP.point, 0)), 0) AS pointDown
+FROM article AS A
+INNER JOIN `member` AS M
+ON A.memberId = M.id
+LEFT JOIN reactionPoint As RP
+ON RP.relTypeCode = 'article'
+AND A.id = RP.relId
+WHERE A.id = 2
+GROUP BY A.id;
+
+select *,
+IFNULL(SUM(`point`), 0) AS pointSum,
+IFNULL(SUM(IF(`point` > 0, `point`, 0)), 0) AS pointUp,
+IFNULL(SUM(IF(`point` < 0, `point`, 0)), 0) AS pointDown
+from reactionPoint
+where relTypeCode = 'article'
+And relId = 2;
+
+delete from reactionPoint
+WHERE relTypeCode = 'article'
+AND memberId = 1
+AND relId = 2;
+
+SELECT
+IFNULL(SUM(`point`), 0) AS pointSum,
+IFNULL(SUM(IF(`point` > 0, `point`, 0)), 0) AS pointUp,
+IFNULL(SUM(IF(`point` < 0, `point`, 0)), 0) AS pointDown
+FROM reactionPoint
+WHERE relTypeCode = 'article'
+AND relId = 2;
+
+
+SELECT R.*, M.nickname As writerName
+FROM reply AS R
+INNER JOIN `member` AS M
+ON R.memberId = M.id
+WHERE R.relTypeCode = 'article'
+AND R.relId = 3
+ORDER BY R.id DESC;
+
+SELECT A.*, count(R.id) AS replyCount
+FROM ( 
+	SELECT A.*, M.nickname AS writerName,
+	IFNULL(SUM(RP.point), 0) AS pointSum,
+	IFNULL(SUM(IF(RP.point > 0, RP.point, 0)), 0) AS pointUp,
+	IFNULL(SUM(IF(RP.point < 0, RP.point, 0)), 0) AS pointDown
+	FROM article AS A
+	INNER JOIN `member` AS M
+	ON A.memberId = M.id
+	LEFT JOIN reactionPoint AS RP
+	ON RP.relTypeCode = 'article'
+	AND A.id = RP.relId
+	GROUP BY A.id
+) AS A
+LEFT JOIN reply AS R
+ON R.relId = A.id
+GROUP BY A.id
+ORDER BY A.id DESC;
+
+# WITH AS 사용 해보기
+with articles as
+(
+	SELECT A.*, M.nickname AS writerName
+	FROM article AS A
+	INNER JOIN `member` AS M
+	ON A.memberId = M.id
+),
+articles2 AS
+(
+	select A.*,
+	IFNULL(SUM(RP.point), 0) AS pointSum,
+	IFNULL(SUM(IF(RP.point > 0, RP.point, 0)), 0) AS pointUp,
+	IFNULL(SUM(IF(RP.point < 0, RP.point, 0)), 0) AS pointDown
+	FROM articles AS A
+	LEFT JOIN reactionPoint AS RP
+	ON RP.relTypeCode = 'article'
+	AND A.id = RP.relId
+	GROUP BY A.id
+)
+
+select A.*, COUNT(R.id) AS replyCount
+from articles2 AS A
+LEFT JOIN reply AS R
+ON R.relId = A.id
+GROUP BY A.id
+ORDER BY A.id DESC;
