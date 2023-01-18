@@ -63,6 +63,19 @@
 			return false;
 		}
 		
+		const maxSizeMb = 10;
+		const maxSize = maxSizeMb * 1024 * 1024;
+		
+		const profileImgFileInput = form["file__member__0__extra__profileImg__1"];
+		
+		if (profileImgFileInput.value) {
+			if (profileImgFileInput.files[0].size > maxSize) {
+				alert(maxSizeMb + "MB 이하의 파일을 업로드 해주세요");
+				profileImgFileInput.focus();
+				return;
+			}
+		}
+		
 		form.cellphoneNum.value = form.cellphoneNum.value.trim();
 		if(form.cellphoneNum.value.length == 0) {
 			alert("전화번호를 입력해주세요.");
@@ -137,7 +150,7 @@
 
 <section class="mt-8 text-xl">
 	<div class="container mx-auto px-3">
-		<form action="doJoin" onsubmit="return MemberJoin__submit(this);">
+		<form action="doJoin" method="POST" enctype="multipart/form-data" onsubmit="return MemberJoin__submit(this);">
 			<div class="table-box-type-1">
 				<table class="table table-zebra w-full">
 					<colgroup>
@@ -181,6 +194,10 @@
 								placeholder="닉네임을 입력해주세요." />
 								<div class="errorMsg mt-2 font-bold text-red-500 text-sm"></div>
 							</td>
+						</tr>
+						<tr>
+							<th>프로필 이미지</th>
+							<td><input accept="image/gif, image/jpeg, image/png" type="file" name="file__member__0__extra__profileImg__1" placeholder="프로필 이미지를 선택해주세요" /></td>
 						</tr>
 						<tr>
 							<th>전화번호</th>

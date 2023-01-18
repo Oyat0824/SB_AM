@@ -3,9 +3,34 @@
 <c:set var="pageTitle" value="Member Login" />
 <%@ include file="../common/head.jsp"%>
 
+<script>
+	function login__submit(form) {
+		form.loginId.value = form.loginId.value.trim();
+		
+		if (form.loginId.value.length == 0) {
+			alert('아이디를 입력해주세요');
+			form.loginId.focus();
+			
+			return;
+		}
+		
+		form.loginPw.value = form.loginPw.value.trim();
+		
+		if (form.loginPw.value.length == 0) {
+			alert('비밀번호를 입력해주세요');
+			form.loginPw.focus();
+			
+			return;
+		}
+		
+		form.submit();
+		
+	}
+</script>
+
 <section class="mt-8 text-xl">
 	<div class="container mx-auto px-3">
-		<form action="doLogin">
+		<form action="doLogin" onsubmit="login__submit(this); return false;">
 			<div class="table-box-type-1">
 				<table class="table table-zebra w-full">
 					<colgroup>

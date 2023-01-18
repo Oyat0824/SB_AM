@@ -72,4 +72,20 @@ public class Rq {
 
 		return "usr/common/js";
 	}
+	
+	public String getProfileImgUri(int membeId) {
+		return "/common/genFile/file/member/" + membeId + "/extra/profileImg/1";
+	}
+
+	public String getProfileFallbackImgUri() {
+		return "https://via.placeholder.com/150/?text=*^_^*";
+	}
+
+	public String getProfileFallbackImgOnErrorHtml() {
+		return "this.src = '" + getProfileFallbackImgUri() + "'";
+	}
+
+	public String getRemoveProfileImgIfNotExitOnErrorHtmlAttr() {
+		return "$(this).remove()";
+	}
 }

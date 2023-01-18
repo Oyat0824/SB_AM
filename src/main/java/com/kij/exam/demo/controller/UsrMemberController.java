@@ -1,10 +1,17 @@
 package com.kij.exam.demo.controller;
 
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartRequest;
 
+import com.kij.exam.demo.service.GenFileService;
 import com.kij.exam.demo.service.MemberService;
 import com.kij.exam.demo.util.Utility;
 import com.kij.exam.demo.vo.Member;
@@ -16,12 +23,14 @@ public class UsrMemberController {
 	// 인스턴스 변수
 	private MemberService memberService;
 	private Rq rq;
+	private GenFileService genFileService;
 
 	// 생성자 주입
 	@Autowired
-	public UsrMemberController(MemberService memberService, Rq rq) {
+	public UsrMemberController(MemberService memberService, Rq rq, GenFileService genFileService) {
 		this.memberService = memberService;
 		this.rq = rq;
+		this.genFileService = genFileService;
 	}
 
 // 액션 메서드
@@ -35,7 +44,7 @@ public class UsrMemberController {
 	@RequestMapping("/usr/member/doJoin")
 	@ResponseBody
 	public String doJoin(String loginId, String loginPw, String loginPwChk, String name, String nickname,
-			String cellphoneNum, String email) {
+			String cellphoneNum, String email, MultipartRequest multipartRequest) {
 		// 유효성 검사
 		if (Utility.empty(loginId)) {
 			return Utility.jsHistoryBack("아이디를 입력해주세요!");
@@ -70,8 +79,20 @@ public class UsrMemberController {
 		if (doJoinRd.isFail()) {
 			return Utility.jsHistoryBack(doJoinRd.getMsg());
 		}
+		
+		int newMemberId = (int) doJoinRd.getBody().get("id");
+		
+		Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();
 
-		Member member = memberService.getMemberById((int) doJoinRd.getData1());
+		for (String fileInputName : fileMap.keySet()) {
+			MultipartFile multipartFile = fileMap.get(fileInputName);
+
+			if (multipartFile.isEmpty() == false) {
+				genFileService.save(multipartFile, newMemberId);
+			}
+		}
+
+		Member member = memberService.getMemberById(newMemberId);
 
 		return Utility.jsReplace(Utility.f("%s님 가입을 축하드립니다.", member.getNickname()), "/");
 	}
@@ -172,7 +193,7 @@ public class UsrMemberController {
 			return rq.jsReturnOnView("회원 수정 인증코드가 필요합니다.", true);
 		}
 
-		ResultData chkMemberModifyAuthKeyRd = memberService.chkMemberModifyAuthKey(rq.getLoginedMemberId(),
+		ResultData<?> chkMemberModifyAuthKeyRd = memberService.chkMemberModifyAuthKey(rq.getLoginedMemberId(),
 				memberModifyAuthKey);
 
 		if (chkMemberModifyAuthKeyRd.isFail()) {
@@ -185,12 +206,12 @@ public class UsrMemberController {
 	// 회원정보 수정
 	@RequestMapping("/usr/member/doModify")
 	@ResponseBody
-	public String doModify(String memberModifyAuthKey, String nickname, String cellphoneNum, String email) {
+	public String doModify(HttpServletRequest req, String memberModifyAuthKey, String nickname, String cellphoneNum, String email, MultipartRequest multipartRequest) {
 		if (Utility.empty(memberModifyAuthKey)) {
 			return Utility.jsHistoryBack("회원 수정 인증코드가 필요합니다.");
 		}
 
-		ResultData chkMemberModifyAuthKeyRd = memberService.chkMemberModifyAuthKey(rq.getLoginedMemberId(),
+		ResultData<?> chkMemberModifyAuthKeyRd = memberService.chkMemberModifyAuthKey(rq.getLoginedMemberId(),
 				memberModifyAuthKey);
 
 		if (chkMemberModifyAuthKeyRd.isFail()) {
@@ -206,6 +227,20 @@ public class UsrMemberController {
 		}
 		if (Utility.empty(email)) {
 			return Utility.jsHistoryBack("이메일을 입력해주세요!");
+		}
+		
+		if (req.getParameter("deleteFile__member__0__extra__profileImg__1") != null) {
+			genFileService.deleteGenFiles("member", rq.getLoginedMemberId(), "extra", "profileImg", 1);
+		}
+
+		Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();
+		
+		for (String fileInputName : fileMap.keySet()) {
+			MultipartFile multipartFile = fileMap.get(fileInputName);
+
+			if (multipartFile.isEmpty() == false) {
+				genFileService.save(multipartFile, rq.getLoginedMemberId());
+			}
 		}
 
 		memberService.doModify(rq.getLoginedMemberId(), nickname, cellphoneNum, email);

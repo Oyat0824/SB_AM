@@ -3,6 +3,27 @@ DROP DATABASE IF EXISTS SB_AM;
 CREATE DATABASE SB_AM;
 USE SB_AM;
 
+##### 파일테이블
+CREATE TABLE genFile (
+    id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    regDate DATETIME DEFAULT NULL,
+    updateDate DATETIME DEFAULT NULL,
+    delDate DATETIME DEFAULT NULL COMMENT '삭제 날짜',
+	delStatus TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '삭제상태 (0 = 미삭제, 1 = 삭제)',
+    `relTypeCode` VARCHAR(20) NOT NULL,
+    `relId` INT UNSIGNED NOT NULL,
+    originFileName VARCHAR(100) NOT NULL,
+    fileExt VARCHAR(10) NOT NULL,
+    typeCode VARCHAR(20) NOT NULL,
+    type2Code VARCHAR(20) NOT NULL,
+    fileSize INT UNSIGNED NOT NULL,
+    fileExtTypeCode VARCHAR(10) NOT NULL,
+    fileExtType2Code VARCHAR(10) NOT NULL,
+    fileNo SMALLINT UNSIGNED NOT NULL,
+    fileDir VARCHAR(20) NOT NULL,
+    KEY relId (relTypeCode, relId, typeCode, type2Code, fileNo)
+);
+
 # member 테이블 생성
 CREATE TABLE `member`(
 	id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -16,7 +37,8 @@ CREATE TABLE `member`(
 	cellphoneNum VARCHAR(20) NOT NULL,
 	email VARCHAR(50) NOT NULL,
 	delStatus TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '탈퇴여부 (0 = 탈퇴 전, 1 = 탈퇴 후)',
-	delDate DATETIME COMMENT '탈퇴 날짜'
+	delDate DATETIME COMMENT '탈퇴 날짜',
+	salt VARCHAR(100) NOT NULL
 );
 
 # board 테이블 생성
@@ -99,6 +121,7 @@ SELECT * FROM article;
 SELECT * FROM reactionPoint;
 SELECT * FROM reply;
 SELECT * FROM attr;
+SELECT * FROM genFile;
 
 ############ member 데이터 추가
 INSERT INTO `member`
@@ -110,7 +133,8 @@ loginPw = 'admin',
 `name` = '관리자',
 `nickname` = '관리자',
 cellphoneNum = '01012345678',
-email = 'langue0824@gmail.com';
+email = 'langue0824@gmail.com',
+salt = 'admin';
 
 INSERT INTO `member`
 SET regDate = NOW(),
@@ -120,7 +144,8 @@ loginPw = 'test1',
 `name` = '고길동',
 `nickname` = '유저1',
 cellphoneNum = '01011112222',
-email = 'langue0824@gmail.com';
+email = 'langue0824@gmail.com',
+salt = 'test1';
 
 INSERT INTO `member`
 SET regDate = NOW(),
@@ -130,11 +155,12 @@ loginPw = 'test2',
 `name` = '구자환',
 `nickname` = '유저2',
 cellphoneNum = '01033334444',
-email = 'langue0824@gmail.com';
+email = 'langue0824@gmail.com',
+salt = 'test1';
 
 # 멤버 테이블에 있는 비밀번호를 SHA2 256으로 변환
-update `member`
-set loginPw = sha2(loginPw, 256);
+UPDATE `member`
+SET loginPw = SHA2(CONCAT(loginPw, salt), 256);
 
 ############ board 데이터 추가
 INSERT INTO `board`
@@ -200,9 +226,9 @@ relId = 2,
 `point` = -1;
 
 ############ reply 데이터 삽입
-insert into reply
-set regDate = now(),
-updateDate = now(),
+INSERT INTO reply
+SET regDate = NOW(),
+updateDate = NOW(),
 memberId = 1,
 relTypeCode = 'article',
 relId = 2,
@@ -228,27 +254,27 @@ relId = 3,
 
 SELECT LAST_INSERT_ID();
 
-select A.*, B.id, B.name as boardId
-from article as A
-inner join board as B
-on A.boardId = B.id;
+SELECT A.*, B.id, B.name AS boardId
+FROM article AS A
+INNER JOIN board AS B
+ON A.boardId = B.id;
 
 # 게시물 갯수 늘리기
-insert into article
+INSERT INTO article
 (
 regDate, updateDate, memberId, boardId, title, `body`
 )
-Select now(), NOW(), ROUND(RAND() * 2) + 1, ROUND(RAND() * 1) + 1, concat('제목_', ROUND(RAND() * 1000)), CONCAT('내용_', ROUND(RAND() * 1000))
-from article;
+SELECT NOW(), NOW(), ROUND(RAND() * 2) + 1, ROUND(RAND() * 1) + 1, CONCAT('제목_', ROUND(RAND() * 1000)), CONCAT('내용_', ROUND(RAND() * 1000))
+FROM article;
 
 -- select count(*)
 -- from article;
 
-select A.*,
-ifnull(SUM(RP.point), 0) as pointSum,
+SELECT A.*,
+IFNULL(SUM(RP.point), 0) AS pointSum,
 IFNULL(SUM(IF(RP.point > 0, RP.point, 0)), 0) AS pointUp,
 IFNULL(SUM(IF(RP.point < 0, RP.point, 0)), 0) AS pointDown
-from ( 
+FROM ( 
 	SELECT A.*, M.nickname AS writerName
 	FROM article AS A
 	INNER JOIN `member` AS M

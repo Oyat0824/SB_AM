@@ -49,7 +49,7 @@ public class MemberService {
 
 		int id = memberRepository.getLastInsertId();
 
-		return ResultData.from("S-1", "회원가입이 완료되었습니다", "id", id);
+		return new ResultData("S-1", "회원가입이 완료되었습니다", "id", id);
 	}
 
 	// 아이디를 통해 멤버 가져오기
@@ -70,11 +70,13 @@ public class MemberService {
 	// 회원정보 수정
 	public void doModify(int loginedMemberId, String nickname, String cellphoneNum, String email) {
 		memberRepository.doModify(loginedMemberId, nickname, cellphoneNum, email);
+		attrService.remove("member", loginedMemberId,"extra","memberModifyAuthKey");
 	}
 
 	// 비밀번호 수정
 	public void doPasswordModify(int loginedMemberId, String loginPw, String salt) {
 		memberRepository.doPasswordModify(loginedMemberId, loginPw, salt);
+		attrService.remove("member", loginedMemberId,"extra","memberModifyAuthKey");
 	}
 
 	// 인증키 생성
